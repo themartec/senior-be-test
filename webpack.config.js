@@ -26,6 +26,10 @@ const config = {
         {
           from: './src/views',
           to: '../dist/views'
+        },
+        {
+          from: './public',
+          to: '../dist/public'
         }
       ]
     }),

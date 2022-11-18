@@ -1,0 +1,44 @@
+version: "3.7"
+
+networks:
+  themartec_backend:
+    driver: bridge
+
+services:
+  postgres:
+    image: postgres:14.4-alpine
+    container_name: themartec_backend_postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=themartec_backend_development
+      - POSTGRES_PASSWORD=cjAEQJs3
+      - PGDATA=/var/lib/postgresql/data/themartec_backend/
+    ports:
+      - '7432:5432'
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - themartec_backend
+
+#  app:
+#    container_name: themartec_backend_backend
+#    build:
+#      context: ./
+#    working_dir: /src
+#    environment:
+#      - .env
+#    ports:
+#      - '7000:3000'
+#    command: npm start
+#    volumes:
+#      - ./:/src
+#    stdin_open: true
+#    tty: true
+#    networks:
+#      - themartec_backend
+#    depends_on:
+#      - postgres
+
+volumes:
+  db-data:
+    driver: local

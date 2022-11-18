@@ -5,7 +5,7 @@
  */
 
 import app from '../app';
-import debug, { Debugger } from 'debug';
+import logger from '../libs/logger';
 import http, { Server } from 'http';
 import { AddressInfo } from 'net';
 
@@ -83,7 +83,6 @@ function onError(error: { syscall: string; code: string; }) {
  */
 
 function onListening() {
-  const logger: Debugger = debug('themartec-backend:server');
   const addr: AddressInfo|string|null = server.address();
 
   if (addr === null) {
