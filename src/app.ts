@@ -10,6 +10,8 @@ import requestLogger from 'morgan';
 import cors from 'cors';
 import helmet from 'helmet';
 import logger from './libs/logger';
+import session from 'express-session';
+import passport from 'passport';
 
 import { ContentSecurityPolicyDirectiveValue } from './types';
 import { AppDataSource } from './database';
@@ -47,6 +49,23 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+const sess = {
+  resave: false,
+  saveUninitialized: false,
+  secret: 'keyboard cat',
+  cookie: {
+    secure: false
+  }
+}
+
+if (app.get('env') === 'production') {
+  app.set('trust proxy', 1) // trust first proxy
+  sess.cookie.secure = true // serve secure cookies
+}
+
+app.use(session(sess));
+app.use(passport.session());
 
 app.use('/', indexRouter);
 

@@ -9,12 +9,16 @@
 </head>
 <body>
 
-<h1 style="text-align: center;padding: 40px;">Google Analytics Reporting API V4</h1>
+<h1 style="text-align: center;padding: 40px;"><%= title %></h1>
 
 <div class="container text-center">
   <div class="row">
     <div class="col">
-      <a href="/oauth2/google" class="btn btn-primary">Connect your Google Analytics Account</a>
+      <% if (user) { %>
+        <p>Welcome, <%= user.email %></p>
+      <% } else { %>
+        <a href="/oauth2/google" class="btn btn-primary">Connect your Google Analytics Account</a>
+      <% } %>
     </div>
     <div class="col">
       <!-- The API response will be printed here. -->
