@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import 'reflect-metadata';
-import { User } from './models/User';
+import { models } from './models';
 import { DataSource } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
@@ -15,9 +15,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME || 'themartec_backend_development',
   synchronize: false,
   logging: true,
-  entities: [
-    User
-  ],
+  entities: models,
   subscribers: [],
   migrations: [
     `${__dirname}/migrations/**/*{.js,.ts}`

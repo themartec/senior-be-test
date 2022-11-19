@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title><%= title %></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+  <!-- Google font -->
+  <link href="https://fonts.googleapis.com/css?family=Cabin:400,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:900" rel="stylesheet">
+
+  <!-- Custom stylesheet -->
+  <link type="text/css" rel="stylesheet" href="/stylesheets/style.css" />
+
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+
+<h1 style="text-align: center; padding-top: 30px;"><%= title %></h1>
+
+<div class="container text-center mt-3">
+  <div class="row">
+    <div class="col">
+      <p>Welcome, <strong><%= user.email %></strong></p>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col">
+      <form class="row row-cols-lg-auto g-3 align-items-center justify-content-end" method="POST" action="/reports/subscribers">
+        <div class="col-8">
+          <label class="visually-hidden" for="email">Email</label>
+          <input type="email" class="form-control" id="email" name="email" required placeholder="Email address">
+        </div>
+        <div class="col-4">
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </div>
+      </form>
+    </div>
+    <div class="col">
+      <form class="row row-cols-lg-auto g-3 align-items-center justify-content-start" method="POST" action="/reports/subscribers">
+        <input type="hidden" name="_method" value="DELETE">
+        <div class="col-8">
+          <label class="visually-hidden" for="email">Email</label>
+          <input type="email" class="form-control" id="email" name="email" required placeholder="Email address">
+        </div>
+        <div class="col-4">
+          <button type="submit" class="btn btn-danger">Unsubscribe</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row mt-4 justify-content-center">
+    <div class="col-6">
+      <table class="table table-bordered table-responsive">
+        <caption>Total: <%= subscribers.length %> subscribers</caption>
+        <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Email</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% for (let i = 0; i < subscribers.length; i++) { %>
+          <tr>
+            <th scope="row"><%= i + 1 %></th>
+            <td><%= subscribers[i].email %></td>
+          </tr>
+        </tbody>
+        <% } %>
+      </table>
+    </div>
+  </div>
+  <p class="mt-3">Date range: <strong><%= fromDate %></strong> to <strong><%= toDate %></strong></p>
+  <div class="row mt-3">
+    <div class="col">
+      <div id="active-users-by-country-chart"></div>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col">
+      <div id="average-engagement-time-chart"></div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+  // Load the Visualization API and the corechart package.
+  google.charts.load('current', {'packages':['corechart']});
+
+  // Set a callback to run when the Google Visualization API is loaded.
+  google.charts.setOnLoadCallback(drawCharts);
+
+  // Callback that creates and populates a data table,
+  // instantiates the pie chart, passes in the data and
+  // draws it.
+  function drawCharts() {
+    const reports = <%- JSON.stringify(data.reports) %> || [];
+
+    if (!reports.length) {
+      return;
+    }
+
+    // Draw column chart
+    const aubcRawData = reports[0];
+    const aubcArrayData = [
+      ['Country', 'Active users']
+    ];
+    aubcRawData.rows.forEach((row) => aubcArrayData.push([row.dimensionValues[0].value, Number(row.metricValues[0].value)]));
+    const aubcChartData = google.visualization.arrayToDataTable(aubcArrayData);
+
+    // Set chart options
+    const aubcChartOptions = {
+      title: 'Active users by country',
+      width: 600,
+      height: 300
+    };
+
+    // Instantiate and draw our chart, passing in some options.
+    const columnChart = new google.visualization.ColumnChart(document.getElementById('active-users-by-country-chart'));
+    columnChart.draw(aubcChartData, aubcChartOptions);
+    
+    // Draw line chart
+    const aetRawData = reports[1];
+
+    const aetArrayData = [
+      ['Date', 'Active minutes']
+    ];
+
+    aetRawData
+            .rows
+            .sort((rowa, rowb) => rowa.dimensionValues[0].value - rowb.dimensionValues[0].value)
+            .forEach((row) => aetArrayData.push([
+              moment().week(row.dimensionValues[0].value).format('YYYY-MM-DD'),
+              Number(row.metricValues[0].value) / Number(row.metricValues[1].value) / 60
+            ]));
+
+    const aetChartData = google.visualization.arrayToDataTable(aetArrayData);
+
+    // Set chart options
+    const aetChartOptions = {
+      title: 'Average engagement time',
+      width: 600,
+      height: 300
+    };
+
+    // Instantiate and draw our chart, passing in some options.
+    const lineChart = new google.visualization.LineChart(document.getElementById('average-engagement-time-chart'));
+    lineChart.draw(aetChartData, aetChartOptions);
+  }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+
+</body>
+</html>

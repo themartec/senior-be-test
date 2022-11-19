@@ -34,8 +34,9 @@ passport.serializeUser((user, done) => {
   done(null, user);
 });
 
-passport.deserializeUser(async (user: User, done) => {
-  done(null, user);
+passport.deserializeUser(async (user: { email: string }, done) => {
+  let userInfo: User | null = await User.findOneBy({email: user.email});
+  done(null, userInfo);
 });
 
 export default passport;

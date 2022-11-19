@@ -1,4 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BaseEntity } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  BaseEntity,
+  OneToMany
+} from 'typeorm';
+import { Subscriber } from './Subscriber';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -19,4 +28,7 @@ export class User extends BaseEntity {
 
   @UpdateDateColumn()
   updatedAt: Date
+
+  @OneToMany(() => Subscriber, (subscriber: Subscriber) => subscriber.user,{ eager: true })
+  subscribers: Subscriber[]
 }

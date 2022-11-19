@@ -9,9 +9,11 @@ import cookieParser from 'cookie-parser';
 import requestLogger from 'morgan';
 import cors from 'cors';
 import helmet from 'helmet';
-import logger from './libs/logger';
 import session from 'express-session';
 import passport from 'passport';
+import methodOverride from 'method-override';
+
+import logger from './libs/logger';
 import { AppDataSource } from './database';
 
 AppDataSource
@@ -47,6 +49,14 @@ app.use(cors());
 app.use(requestLogger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(methodOverride(function (req, res) {
+  if (req.body && typeof req.body === 'object' && '_method' in req.body) {
+    // look in urlencoded POST bodies and delete it
+    const method = req.body._method
+    delete req.body._method
+    return method
+  }
+}))
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 

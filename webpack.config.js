@@ -24,12 +24,12 @@ const config = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: './src/views',
-          to: '../dist/views'
+          from: './src/views/**/*',
+          to: '../dist/views/**/*'
         },
         {
-          from: './public',
-          to: '../dist/public'
+          from: './public/**/*',
+          to: '../dist/public/**/*'
         }
       ]
     }),

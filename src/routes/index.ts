@@ -1,35 +1,20 @@
 import 'express-async-errors';
 import express, { Router } from 'express';
 import { index } from './controller';
-import passport from '../libs/passport';
+import checkPassport from '../middlewares/check-passport';
+
+import reports from './reports';
+import oauth2 from './oauth2';
 
 const router: Router = express.Router();
 
 // home page
-router.get('/', index as any);
+router.get('/', index);
 
-router.get(
-  '/oauth2/google',
-  passport.authenticate(
-    'google',
-    {
-      accessType: 'offline',
-      scope: [
-        'https://www.googleapis.com/auth/analytics',
-        'https://www.googleapis.com/auth/userinfo.email',
-        'https://www.googleapis.com/auth/userinfo.profile'
-      ],
-      failureRedirect: '/'
-    }
-  )
-);
+// oauth2 support routes
+router.use('/oauth2', oauth2);
 
-router.get(
-  '/oauth2/google/callback',
-  passport.authenticate('google', { failureRedirect: '/' }),
-  (req, res) => {
-    res.redirect('/');
-  }
-);
+// authenticated with visualization reports
+router.use('/reports', checkPassport, reports);
 
 export default router;

@@ -1,7 +1,7 @@
 version: "3.7"
 
 networks:
-  themartec_backend:
+  themartec:
     driver: bridge
 
 services:
@@ -18,7 +18,7 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:
-      - themartec_backend
+      - themartec
 
 #  app:
 #    container_name: themartec_backend_backend
@@ -35,9 +35,18 @@ services:
 #    stdin_open: true
 #    tty: true
 #    networks:
-#      - themartec_backend
+#      - themartec
 #    depends_on:
 #      - postgres
+
+  mailcatcher:
+    image: schickling/mailcatcher
+    container_name: themartec_mailcatcher
+    networks:
+      - themartec
+    ports:
+      - "7180:1080"
+      - "7125:1025"
 
 volumes:
   db-data:
