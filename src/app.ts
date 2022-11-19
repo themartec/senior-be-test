@@ -12,8 +12,6 @@ import helmet from 'helmet';
 import logger from './libs/logger';
 import session from 'express-session';
 import passport from 'passport';
-
-import { ContentSecurityPolicyDirectiveValue } from './types';
 import { AppDataSource } from './database';
 
 AppDataSource
@@ -31,7 +29,9 @@ app.set('view engine', 'ejs');
 
 const csp: {[p: string]: Iterable<ContentSecurityPolicyDirectiveValue>} = helmet.contentSecurityPolicy.getDefaultDirectives();
 (csp['script-src'] as ContentSecurityPolicyDirectiveValue[]).push("'unsafe-inline'");
-(csp['script-src'] as ContentSecurityPolicyDirectiveValue[]).push('https://cdn.jsdelivr.net/npm/');
+(csp['script-src'] as ContentSecurityPolicyDirectiveValue[]).push('https://cdn.jsdelivr.net/');
+(csp['script-src'] as ContentSecurityPolicyDirectiveValue[]).push('https://www.gstatic.com/');
+(csp['script-src'] as ContentSecurityPolicyDirectiveValue[]).push('https://cdnjs.cloudflare.com/');
 
 app.use(
   helmet(

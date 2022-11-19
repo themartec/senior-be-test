@@ -6,7 +6,7 @@ import passport from '../libs/passport';
 const router: Router = express.Router();
 
 // home page
-router.get('/', index);
+router.get('/', index as any);
 
 router.get(
   '/oauth2/google',

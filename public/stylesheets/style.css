@@ -108,3 +108,8 @@ body {
     font-size: 16px;
   }
 }
+
+#active-users-by-country-chart, #average-engagement-time-chart {
+  width: 600px;
+  margin: auto;
+}

@@ -30,11 +30,11 @@ passport.use(new Strategy({
   }
 ));
 
-passport.serializeUser((user: Express.User, done: (err: any, id?: unknown) => void) => {
+passport.serializeUser((user, done) => {
   done(null, user);
 });
 
-passport.deserializeUser((user: User, done) => {
+passport.deserializeUser(async (user: User, done) => {
   done(null, user);
 });
 
