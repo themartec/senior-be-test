@@ -2,7 +2,11 @@ import puppeteer, { Browser, Page } from 'puppeteer';
 
 export const generatePDF = async (url: string, accessToken: string, destPath: string): Promise<void> => {
   // start a new browser, without showing UI
-  const browser: Browser = await puppeteer.launch({headless: true});
+  const browser: Browser = await puppeteer.launch({
+    headless: true,
+    ignoreHTTPSErrors: true,
+    args: ['--no-sandbox']
+  });
   const page: Page = await browser.newPage();
 
   await page.setExtraHTTPHeaders({

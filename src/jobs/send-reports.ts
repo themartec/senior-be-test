@@ -29,9 +29,14 @@ export class SendReportsJob extends Job {
 
       const destPath = `/tmp/reports-${user.id}.pdf`;
       // generate pdf of reports
-      await generatePDF('http://localhost:3000/charts', user.accessToken, destPath);
+      await generatePDF(`${process.env.HOST}/charts`, user.accessToken, destPath);
 
       const subscribers: Subscriber[] = user.subscribers;
+
+      if (!subscribers.length) {
+        continue;
+      }
+
       const emails: string[] = subscribers.map((subscriber) => subscriber.email);
 
       await Mailer.sendMail({

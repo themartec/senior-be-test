@@ -29,24 +29,46 @@ services:
     networks:
       - themartec
 
-#  app:
-#    container_name: themartec_app
-#    build:
-#      context: ./
-#    working_dir: /src
-#    environment:
-#      - .env
-#    ports:
-#      - '7000:3000'
-#    command: npm start
-#    volumes:
-#      - ./:/src
-#    stdin_open: true
-#    tty: true
-#    networks:
-#      - themartec
-#    depends_on:
-#      - postgres
+  backend: &backend
+    container_name: themartec_app
+    build:
+      context: ./
+    working_dir: /src
+    environment:
+      - .env
+    ports:
+      - '7000:3000'
+    command:
+      - /bin/sh
+      - -c
+      - |
+        npm run migration:up
+        npm run dev
+    volumes:
+      - ./src:/src/src
+    stdin_open: true
+    tty: true
+    networks:
+      - themartec
+    depends_on:
+      - postgres
+
+  worker:
+    <<: *backend
+    container_name: themartec_worker
+    command:
+      - /bin/sh
+      - -c
+      - |
+        npm run migration:up
+        npm run jobs:init
+        npm run worker:dev
+    depends_on:
+      - redis
+      - postgres
+    ports: []
+    networks:
+      - themartec
 
   mailcatcher:
     image: schickling/mailcatcher

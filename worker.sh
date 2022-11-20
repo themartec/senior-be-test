@@ -3,6 +3,7 @@
 set -e
 
 npm run migration:up
-npm start
+npm run worker
+npm run jobs:init
 
 exec "$@"
