@@ -1,17 +1,20 @@
 import { NextFunction, Request, Response } from 'express';
 import { oauth2Client } from '../libs/google-apis';
+import User from '../models/User';
 
 export default (req: Request, res: Response, next: NextFunction) => {
-  if (!req.user) {
+  const user: User | undefined = req.user;
+
+  if (!user) {
     res.redirect('/');
     return;
   }
 
   oauth2Client.setCredentials({
-    access_token: req.user.accessToken,
-    refresh_token: req.user.refreshToken
+    access_token: user.accessToken,
+    refresh_token: user.refreshToken
   });
 
-  res.locals.user = req.user;
+  res.locals.user = user;
   next();
 }

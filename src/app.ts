@@ -1,5 +1,3 @@
-import './bootstrap';
-
 import createError from 'http-errors';
 import express, { Express, Request, Response, NextFunction } from 'express';
 import path from 'path';

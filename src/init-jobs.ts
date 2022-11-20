@@ -1,7 +1,8 @@
 import { SendReportsJob } from './jobs';
 
+// create send reports email job
 const job = new SendReportsJob();
-job.create({xxx: 111})
+job.create({}, { repeat: { pattern: '0 */3 * ? * *' }})
   .then(() =>{
     console.log('Jobs created!')
     process.exit(0);

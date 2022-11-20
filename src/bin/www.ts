@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 
+import { init } from '../bootstrap';
 import app from '../app';
 import logger from '../libs/logger';
 import http, { Server } from 'http';
@@ -21,14 +22,6 @@ app.set('port', port);
  */
 
 const server: Server = http.createServer(app);
-
-/**
- * Listen on provided port, on all network interfaces.
- */
-
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.
@@ -95,3 +88,14 @@ function onListening() {
     : 'port ' + addr.port;
   logger('Listening on ' + bind);
 }
+
+init().then(() => {
+
+  /**
+   * Listen on provided port, on all network interfaces.
+   */
+
+  server.listen(port);
+  server.on('error', onError);
+  server.on('listening', onListening);
+});
