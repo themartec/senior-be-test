@@ -9,9 +9,10 @@ export class Job {
     this.queue = defaultQueue || queue;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   perform(params: Record<string, unknown>): Promise<void> {
     throw new Error('not implemented');
-  };
+  }
 
   async create(params: Record<string, unknown>, opts?: Record<string, unknown>): Promise<void> {
     await this.queue.add(
