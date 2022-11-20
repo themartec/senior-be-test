@@ -7,10 +7,10 @@ import {
   BaseEntity,
   OneToMany
 } from 'typeorm';
-import { Subscriber } from './Subscriber';
+import Subscriber from './Subscriber';
 
 @Entity('users')
-export class User extends BaseEntity {
+export default class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number
 

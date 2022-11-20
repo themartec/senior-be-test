@@ -1,12 +1,13 @@
 import passport from 'passport';
-import { Strategy } from 'passport-google-oauth20';
-import { User } from '../models/User';
+import * as OAuth2 from 'passport-google-oauth20';
+import * as Bearer from 'passport-http-bearer';
+import User from '../models/User';
 
-passport.use(new Strategy({
+passport.use(new OAuth2.Strategy({
     clientID: process.env.GOOGLE_CLIENT_ID || '',
     clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
     callbackURL: process.env.GOOGLE_REDIRECT_URL || ''
-  }, async(accessToken, refreshToken, profile, cb) => {
+  }, async (accessToken, refreshToken, profile, cb) => {
     if (!profile.emails?.length) {
       cb(null);
       return;
@@ -30,12 +31,18 @@ passport.use(new Strategy({
   }
 ));
 
+passport.use(new Bearer.Strategy(async (accessToken, cb) => {
+    const user: User | null = await User.findOneBy({accessToken: accessToken});
+    return cb(null, user);
+  }
+));
+
 passport.serializeUser((user, done) => {
   done(null, user);
 });
 
 passport.deserializeUser(async (user: { email: string }, done) => {
-  let userInfo: User | null = await User.findOneBy({email: user.email});
+  const userInfo: User | null = await User.findOneBy({email: user.email});
   done(null, userInfo);
 });
 

@@ -13,7 +13,11 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const nodeExternals = require('webpack-node-externals');
 
 const config = {
-  entry: './src/bin/www.ts',
+  entry: {
+    'main': './src/bin/www.ts',
+    'create-jobs': './src/init-jobs.ts',
+    'worker': './src/queue/worker.ts',
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
   },
@@ -24,12 +28,12 @@ const config = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: './src/views/**/*',
-          to: '../dist/views/**/*'
+          from: './src/views',
+          to: '../dist/views'
         },
         {
-          from: './public/**/*',
-          to: '../dist/public/**/*'
+          from: './public',
+          to: '../dist/public'
         }
       ]
     }),

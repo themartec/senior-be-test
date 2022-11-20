@@ -7,7 +7,7 @@ networks:
 services:
   postgres:
     image: postgres:14.4-alpine
-    container_name: themartec_backend_postgres
+    container_name: themartec_postgres
     restart: always
     environment:
       - POSTGRES_USER=themartec_backend_development
@@ -20,8 +20,17 @@ services:
     networks:
       - themartec
 
+  redis:
+    image: redis:latest
+    container_name: themartec_redis
+    restart: always
+    ports:
+      - '7379:6379'
+    networks:
+      - themartec
+
 #  app:
-#    container_name: themartec_backend_backend
+#    container_name: themartec_app
 #    build:
 #      context: ./
 #    working_dir: /src
@@ -45,8 +54,8 @@ services:
     networks:
       - themartec
     ports:
-      - "7180:1080"
-      - "7125:1025"
+      - '7180:1080'
+      - '7125:1025'
 
 volumes:
   db-data:

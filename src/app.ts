@@ -1,6 +1,4 @@
-import dotenv from 'dotenv';
-
-dotenv.config();
+import './bootstrap';
 
 import createError from 'http-errors';
 import express, { Express, Request, Response, NextFunction } from 'express';
@@ -13,14 +11,7 @@ import session from 'express-session';
 import passport from 'passport';
 import methodOverride from 'method-override';
 
-import logger from './libs/logger';
-import { AppDataSource } from './database';
-
-AppDataSource
-  .initialize()
-  .then(() => { logger('Database connected'); })
-  .catch(error => logger(error));
-
+import dashboard from './queue/dashboard';
 import indexRouter from './routes/index';
 
 const app: Express = express();
@@ -49,7 +40,7 @@ app.use(cors());
 app.use(requestLogger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(methodOverride(function (req, res) {
+app.use(methodOverride(function (req) {
   if (req.body && typeof req.body === 'object' && '_method' in req.body) {
     // look in urlencoded POST bodies and delete it
     const method = req.body._method
@@ -78,6 +69,7 @@ app.use(session(sess));
 app.use(passport.session());
 
 app.use('/', indexRouter);
+app.use('/admin/queues', dashboard);
 
 // catch 404 and forward to error handler
 app.use(function(req: Request, res: Response, next: NextFunction) {

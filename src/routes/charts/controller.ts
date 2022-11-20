@@ -8,11 +8,10 @@ export const index = async (req: Request, res: Response) => {
 
   const data: analyticsdata_v1beta.Schema$BatchRunReportsResponse = await Analytics.fetchReports(fromDate, toDate);
 
-  res.render('reports', {
+  res.render('charts', {
     title: 'Analytics Data API V1Beta',
     fromDate: fromDate,
     toDate: toDate,
     data: data,
-    subscribers: req.user?.subscribers || []
   });
 }
