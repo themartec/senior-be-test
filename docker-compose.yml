@@ -10,8 +10,9 @@ services:
     container_name: themartec_postgres
     restart: always
     environment:
-      - POSTGRES_USER=themartec_backend_development
+      - POSTGRES_USER=themartec_backend
       - POSTGRES_PASSWORD=cjAEQJs3
+      - POSTGRES_DB=themartec_backend_development
       - PGDATA=/var/lib/postgresql/data/themartec_backend/
     ports:
       - '7432:5432'
@@ -35,7 +36,7 @@ services:
       context: ./
     working_dir: /src
     environment:
-      - .env
+      - .env.development
     ports:
       - '7000:3000'
     command:
@@ -46,6 +47,8 @@ services:
         npm run dev
     volumes:
       - ./src:/src/src
+      - ./.env.development:/src/.env.development
+      - ./.env.test:/src/.env.test
     stdin_open: true
     tty: true
     networks:

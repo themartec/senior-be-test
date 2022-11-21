@@ -1,11 +1,13 @@
-import dotenv from 'dotenv';
+import { Database } from './database';
 
-dotenv.config();
-
-import { AppDataSource } from './database';
 import logger from './libs/logger';
 
 export const init = async () => {
-  await AppDataSource.initialize();
+  await Database.initialize();
   logger('Database connected');
 };
+
+export const destroy = async () => {
+  await Database.destroy();
+  logger('Database disconnected');
+}

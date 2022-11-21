@@ -7,8 +7,7 @@ import logger from './../libs/logger';
 import { Mailer } from '../libs/nodemailer';
 
 export class SendReportsJob extends Job {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async perform(params: Record<string, unknown>): Promise<void> {
+  async perform(): Promise<void> {
     const users: User[] = await User.find();
     for (let i = 0; i < users.length; i++) {
       const user = users[i];
