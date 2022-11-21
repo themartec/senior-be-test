@@ -12,7 +12,7 @@ export class SendReportsJob extends Job {
     for (let i = 0; i < users.length; i++) {
       const user = users[i];
 
-      // generate access token
+      // use refresh token obtained for OAuth2 to generate new access token
       oauth2Client.setCredentials({
         refresh_token: user.refreshToken
       });
@@ -24,9 +24,11 @@ export class SendReportsJob extends Job {
         continue;
       }
 
+      // Use new access token to avoid expiration
       user.accessToken = tokenInfo.token;
       await user.save();
 
+      // Generate pdf file of reports
       const destPath = `/tmp/reports-${user.id}.pdf`;
       // generate pdf of reports
       await generatePDF(`${process.env.HOST}/charts`, user.accessToken, destPath);
@@ -37,8 +39,10 @@ export class SendReportsJob extends Job {
         continue;
       }
 
+      // Prepare a list of subscribers
       const emails: string[] = subscribers.map((subscriber) => subscriber.email);
 
+      // Send email to subscribers of each user
       await Mailer.sendMail({
         from: `"Fred Foo 👻" <${user.email}>`, // sender address
         to: emails.join(', '), // list of receivers
