@@ -4,5 +4,6 @@ import AnalyticsController from '../../../controllers/analytics.controller';
 const router: express.Router = express.Router();
 
 router.get('/report', AnalyticsController.reportHandler);
+router.get('/fetch-data', AnalyticsController.fetchDataHandler);
 
 export default router;

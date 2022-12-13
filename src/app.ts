@@ -17,10 +17,16 @@ class App {
 		this.app = express();
 		this.logger = Logger.getLogger();
 
-		this._init();
-
 		this.app.use(express.static(path.join(__dirname, 'public')));
 		this.app.use('/', router);
+
+		this.app.set('views', path.join(__dirname, 'views'));
+		this.app.set('view engine', 'ejs');
+
+		this.app.use(requestLogMiddleware);
+
+		this.app.use(json());
+		this.app.use(cors());
 
 		this.app.use(errorMiddleware);
 	}
@@ -29,14 +35,6 @@ class App {
 		this.app.listen(port, () => {
 			this.logger.info(`App listening on the port ${port}`);
 		});
-	}
-
-	private _init() {
-		this.app.use(requestLogMiddleware);
-
-		this.app.use(json());
-		this.app.use(cors());
-		this.app.use(cookieParser());
 	}
 
 }

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8" />
+		<title>Testing</title>
+		<meta name="viewport" content="width=device-width, inital-scale=1, user-scalable=no">
+		<link rel="stylesheet" href="/css/styles.css" />
+		<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+	</head>
+	<body class="form-center">
+		<div>
+			<h4>Google Analytics Report</h4>
+			<div id="chart"></div>
+			<script>
+				// const url = <%- `http://localhost:${port}/api/analytics/fetch-data`%>;
+				const apiPort = <%= port%>;
+				const url = `http://localhost:${apiPort}/api/analytics/fetch-data`;
+
+				console.log( 'url: ', url );
+
+				fetch(url)
+					.then((res) => {
+						if (!res.ok) throw new Error(res.statusText);
+						return res.json();
+					})
+					.then((data) => {
+						const items = [];
+
+						data.forEach((v) => {
+							items.push([v.name, v.value]);
+						});
+
+						const chart = {
+							type: 'line',
+							series: [{ values: items }],
+						};
+
+						// renders zingchart to the page
+						zingchart.render({
+							id: 'chart',
+							data: chart,
+							height: '100%',
+							width: '100%',
+						});
+					})
+					// catches errors in promise chain
+					.catch((error) => console.log('fetch error'));
+			</script>
+		</div>
+	</body>
+</html>

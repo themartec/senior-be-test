@@ -5,3 +5,8 @@
 	width: 100vw;
 	justify-content: center;
 }
+
+#chart {
+	height: 300px;
+	width: 300px;
+}
