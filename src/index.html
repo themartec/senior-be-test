@@ -30,12 +30,6 @@
     function revokeToken() {
       google.accounts.oauth2.revoke(access_token, () => { console.log('access token revoked') });
     }
-    function loadCalendar() {
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', 'https://www.googleapis.com/calendar/v3/calendars/primary/events');
-      xhr.setRequestHeader('Authorization', 'Bearer ' + access_token);
-      xhr.send();
-    }
   </script>
 
 
