@@ -16,7 +16,7 @@ passport.use(
 
 				if ( !email ) throw new Error('Not allow empty email');
 
-				const user = await new UserRepository().findOneAndReplace(
+				const user = await new UserRepository().findOneAndUpdate(
 					{ email }, { email, accessToken, refreshToken }, { upsert: true }
 				) as IUserEntity;
 
@@ -33,7 +33,7 @@ passport.serializeUser((user, doneCb) => {
 });
 
 passport.deserializeUser((user: IUserEntity, doneCb) => {
-	// TODO: process update accessToken when it was expired
+	// googleOAuth2Auth.setCredentials({ access_token: user.accessToken, refresh_token: user.refreshToken });
 	return doneCb(null, user);
 });
 

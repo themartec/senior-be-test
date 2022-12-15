@@ -22,38 +22,52 @@
 				</form>
 				<button onclick="load()">Refresh</button>
 			</div>
-			<div id="chart"></div>
+			<div id="chartContainer"></div>
 			<script>
-				const renderChart = data => {
-					const items = [];
+				const renderChart = (elID, title, items) => {
+					console.log({ elID, title, items });
+					let rendersItems = [];
 
-					data.forEach((v) => {
-						items.push([v.name, v.value]);
-					});
+					if ( items.length ) {
+						const keys = Object.keys(items[0]);
+						rendersItems = items.map( it => keys.map(k => it[k]) );
+					}
 
 					const chart = {
 						type: 'line',
-						series: [{ values: items }],
+						series: [{ values: rendersItems }],
+						title: {
+							text: title,
+						},
 					};
 					// renders zingchart to the page
 					zingchart.render({
-						id: 'chart',
+						id: elID,
 						data: chart,
 						height: '100%',
 						width: '100%',
 					});
 				};
 				const apiPort = <%= port%>;
-				let url = `http://localhost:${apiPort}/api/analytics/fetch-data`;
-
 				const fetchAndRender = (targetUrl) => {
 					fetch(targetUrl)
 						.then((res) => {
 							if (!res.ok) throw new Error(res.statusText);
 							return res.json();
 						})
-						.then((data) => { renderChart(data) })
-						.catch((error) => console.log('fetch error'));
+						.then((reports) => {
+							console.log({ reports });
+							const chartContainer = document.getElementById('chartContainer');
+							reports.map(({ title, items }) => {
+								const chartEl = document.createElement('div');
+
+								chartEl.setAttribute('id', `chart_${title}`);
+								chartEl.setAttribute('class', 'chart');
+								chartContainer.appendChild(chartEl);
+								renderChart(chartEl.id, title, items);
+							});
+						})
+						.catch((error) => console.log(error));
 				}
 
 				const load = () => {
@@ -61,7 +75,7 @@
 
 					if ( !propertyID ) console.error('Could not load report.')
 
-					url+=`?propertyID=${propertyID}`
+					const url = `http://localhost:${apiPort}/api/analytics/fetch-data?propertyID=${propertyID}`;
 					console.log(`Get report for ${propertyID}: at ${url}`);
 
 					fetchAndRender(url);

@@ -29,7 +29,7 @@ class App {
 			secret: 'changeme',
 			resave: false,
 			saveUninitialized: false,
-			cookie: { secure: true }
+			cookie: { secure: false }
 		}));
 		this.app.use(passport.initialize());
 		this.app.use(passport.session());

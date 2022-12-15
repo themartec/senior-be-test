@@ -19,7 +19,7 @@ router.get('/google', passport.authenticate(
 router.get('/google/oauthcallback', passport.authenticate(
 	'google',
 	{
-		successRedirect: '/api/analytics/properties',
+		successRedirect: '/api/analytics/report',
 		failureRedirect: '/',
 	}
 ));

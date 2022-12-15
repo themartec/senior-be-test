@@ -1,9 +1,5 @@
-import { BetaAnalyticsDataClient } from '@google-analytics/data';
 import UserRepository from '../database/user/user.repository';
-
-const analyticsDataClient = new BetaAnalyticsDataClient({
-	keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
-});
+import { analyticsDataClient } from '../libs/googleapis';
 
 class AnalyticsService {
 
@@ -15,36 +11,66 @@ class AnalyticsService {
 		await new UserRepository().update({ email: userEmail }, { ga4PropertyID: propertyID });
 	}
 
-	async runReport( propertyID: number ) {
-		const [response] = await analyticsDataClient.runReport({
-			property: `properties/${propertyID}`,
-			dateRanges: [
-				{
-					startDate: '2020-03-31',
-					endDate: 'today',
-				},
-			],
-			dimensions: [
-				{
-					name: 'city',
-				},
-			],
-			metrics: [
-				{
-					name: 'activeUsers',
-				},
-			],
-		});
-
-		console.log('Report result:');
-
-		if (response.rows) {
-			response.rows.forEach(row => {
-				console.log(row.dimensionValues && row.dimensionValues[0], row.metricValues && row.metricValues[0]);
+	async runReports(propertyID: number, timeRange?: { startDate: string, endDate: string } ) {
+		try {
+			const { startDate = '2022-01-01', endDate = 'today' } = timeRange || {};
+			const reportDatum = await analyticsDataClient.properties.batchRunReports({
+				property: `properties/${propertyID}`,
+				requestBody: {
+					requests: [
+						{
+							dateRanges: [{ startDate, endDate }],
+							dimensions: [{ name: 'country' }],
+							metrics: [{ name: 'totalUsers' }],
+						},
+						{
+							dateRanges: [{ startDate, endDate }],
+							dimensions: [{ name: 'country' }],
+							metrics: [{ name: 'activeUsers' }],
+						},
+					]
+				}
 			});
-		}
+			const result = reportDatum.data.reports?.map( rp => {
+				const x = rp.dimensionHeaders?.length && rp.dimensionHeaders[0].name || 'x';
+				const y = rp.metricHeaders?.length && rp.metricHeaders[0].name || 'y';
+				const report = { title: `${x}/${y}`, items: [] };
 
-		return response;
+				if ( !rp.rows?.length ) return report;
+
+				const items = rp.rows.map( row => {
+					return {
+						[x]: row.dimensionValues?.length && row.dimensionValues[0].value,
+						[y]: row.metricValues?.length && row.metricValues[0].value,
+					};
+				});
+
+				report.items = items as any;
+				return report;
+			});
+
+			const fakeData = [
+				{
+					title: 'country_totalUsers',
+					items: [
+						{'country': 'Japan', 'totalUsers': 2541},
+						{'country': 'France', 'totalUsers': 1000},
+					]
+				},
+				{
+					title: 'country_activeUsers',
+					items: [
+						{'country': 'Japan', 'activeUsers': 1500},
+						{'country': 'France', 'activeUsers': 800},
+					],
+				}
+			];
+
+			return fakeData;
+		} catch (error) {
+			// TODO: check errors which related to permission then throw corresponding error.
+			throw error;
+		}
 	}
 
 }

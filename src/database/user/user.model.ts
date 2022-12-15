@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 		},
+		ga4PropertyID: {
+			type: String,
+			required: false,
+		},
 	},
 	{
 		timestamps: true,
