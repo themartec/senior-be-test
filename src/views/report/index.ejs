@@ -17,13 +17,71 @@
 				<form>
 					PropertyID: <input type="text" id="propertyID" placeholder="<%- propertyID%>" value="<%- propertyID%>">
 				</form>
-				<form>
-					Emails:
-				</form>
+				Emails:
+				<section id="emailListID"></section>
+				<br>
+				<br>
+				<input type="text" id="subscribeEmailID">
+				<button onclick="subscribe()">Subscribe</button>
+				<br>
+				<br>
+				<input type="text" id="unsubscribeEmailID">
+				<button onclick="unsubscribe()">Unsubscribe</button>
+				<br>
+				<br>
 				<button onclick="load()">Refresh</button>
 			</div>
 			<div id="chartContainer"></div>
 			<script>
+				const apiPort = <%= port%>;
+				// const curEmail = <%= email%>;
+				const subscribe = () => {
+					const email = document.getElementById('subscribeEmailID').value;
+
+					if ( !email || document.getElementById(email) ) return;
+					const url = `http://localhost:${apiPort}/api/analytics/subscribe`;
+
+					fetch(
+						url,
+						{
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							body: JSON.stringify({ email })
+						}
+					).then((res) => {
+						if (!res.ok) throw new Error(res.statusText);
+						const emailEl = document.createElement('option');
+						emailEl.setAttribute('id', email);
+						emailEl.setAttribute('value', email);
+
+						document.getElementById(emailListID).appendChild(emailEl);
+						return res.json();
+					}).catch((error) => console.log(error));
+				}
+				const unsubscribe = () => {
+					const email = document.getElementById('subscribeEmailID').value;
+
+					if ( !email || !document.getElementById(email) ) return;
+
+					const url = `http://localhost:${apiPort}/api/analytics/unsubscribe`;
+
+					fetch(
+						url,
+						{
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							body: JSON.stringify({ email })
+						}
+					).then((res) => {
+						if (!res.ok) throw new Error(res.statusText);
+						document.removeChild(document.getElementById(email));
+						return res.json();
+					}).catch((error) => console.log(error));
+				}
 				const renderChart = (elID, title, items) => {
 					console.log({ elID, title, items });
 					let rendersItems = [];
@@ -48,7 +106,6 @@
 						width: '100%',
 					});
 				};
-				const apiPort = <%= port%>;
 				const fetchAndRender = (targetUrl) => {
 					fetch(targetUrl)
 						.then((res) => {
@@ -70,7 +127,7 @@
 						.catch((error) => console.log(error));
 				}
 
-				const load = () => {
+				const load = async () => {
 					const propertyID = document.getElementById('propertyID').value;
 
 					if ( !propertyID ) console.error('Could not load report.')
@@ -78,7 +135,7 @@
 					const url = `http://localhost:${apiPort}/api/analytics/fetch-data?propertyID=${propertyID}`;
 					console.log(`Get report for ${propertyID}: at ${url}`);
 
-					fetchAndRender(url);
+					// fetchAndRender(url);
 				};
 
 				load();

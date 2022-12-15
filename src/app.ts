@@ -1,5 +1,4 @@
 import * as express from 'express';
-import { json } from 'body-parser';
 import * as cors from 'cors';
 import * as cookieParser from 'cookie-parser';
 import * as path from 'path';
@@ -12,6 +11,7 @@ import requestLogMiddleware from './middlewares/request.log.middleware';
 import errorMiddleware from './middlewares/error.middleware';
 import router from './routes';
 import mongoConfig from './configs/mongodb';
+import SendMailCronJob from './libs/cron-job';
 
 class App {
 	app: express.Application;
@@ -21,7 +21,7 @@ class App {
 		this.app = express();
 		this.logger = Logger.getLogger();
 
-		this.app.use(json());
+		this.app.use(express.json());
 		this.app.use(cookieParser());
 		this.app.use(cors());
 
@@ -47,6 +47,7 @@ class App {
 
 	async listen(port: number) {
 		await this.connectToTheDatabase();
+		SendMailCronJob.loadOldCronJob();
 		this._listen(port);
 	}
 

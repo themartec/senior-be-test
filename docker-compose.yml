@@ -13,3 +13,9 @@ services:
       - 27017:27017
     volumes:
       - ./scripts/mongodb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+  # s-mailcatcher:
+  #   image: dockage/mailcatcher:0.8.2
+  #   container_name: c-mailcatcher
+  #   ports:
+  #     - 5080:1080
+  #     - ${MAILER_PORT}:5025

@@ -25,7 +25,7 @@ class BaseRepository<TData, TEntity, TDocument extends Document> implements IRep
 	async findOrCreate(query: Query<TDocument>, doc: TData, opt?: QueryOptions): Promise<TEntity> {
 		const resDoc = this.model.findOneAndUpdate(query, doc as object, { upsert: true });
 
-		return this._mapToEntity(resDoc as any);
+		return resDoc as TEntity;
 	}
 
 	async findOneAndReplace(query: Query<TDocument>, doc: TData, opt?: QueryOptions): Promise<TEntity | null> {

@@ -1,19 +1,22 @@
 import UserRepository from '../database/user/user.repository';
-import { analyticsDataClient } from '../libs/googleapis';
+import { getAnalyticsDataClient } from '../libs/googleapis';
 
 class AnalyticsService {
 
-	constructor() {
-		//
+	private email: string;
+
+	constructor( userEmail: string ) {
+		this.email = userEmail;
 	}
 
-	async savePropertyID(userEmail: string, propertyID: number) {
-		await new UserRepository().update({ email: userEmail }, { ga4PropertyID: propertyID });
+	async savePropertyID(propertyID: number) {
+		await new UserRepository().update({ email: this.email }, { ga4PropertyID: propertyID });
 	}
 
-	async runReports(propertyID: number, timeRange?: { startDate: string, endDate: string } ) {
+	async runReports( propertyID: number, timeRange?: { startDate: string, endDate: string }) {
 		try {
 			const { startDate = '2022-01-01', endDate = 'today' } = timeRange || {};
+			const analyticsDataClient = getAnalyticsDataClient( this.email ).client;
 			const reportDatum = await analyticsDataClient.properties.batchRunReports({
 				property: `properties/${propertyID}`,
 				requestBody: {
@@ -66,7 +69,7 @@ class AnalyticsService {
 				}
 			];
 
-			return fakeData;
+			return result;
 		} catch (error) {
 			// TODO: check errors which related to permission then throw corresponding error.
 			throw error;
