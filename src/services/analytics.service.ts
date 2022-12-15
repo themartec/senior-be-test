@@ -1,4 +1,5 @@
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
+import UserRepository from '../database/user/user.repository';
 
 const analyticsDataClient = new BetaAnalyticsDataClient({
 	keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
@@ -10,9 +11,13 @@ class AnalyticsService {
 		//
 	}
 
-	async runReport() {
+	async savePropertyID(userEmail: string, propertyID: number) {
+		await new UserRepository().update({ email: userEmail }, { ga4PropertyID: propertyID });
+	}
+
+	async runReport( propertyID: number ) {
 		const [response] = await analyticsDataClient.runReport({
-			property: `properties/${process.env.GOOGLE_ANALYTICS_PROPERTY_ID}`,
+			property: `properties/${propertyID}`,
 			dateRanges: [
 				{
 					startDate: '2020-03-31',

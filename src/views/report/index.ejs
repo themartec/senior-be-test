@@ -3,48 +3,71 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>Testing</title>
-		<meta name="viewport" content="width=device-width, inital-scale=1, user-scalable=no">
+		<meta
+			name="viewport"
+			content="width=device-width, inital-scale=1, user-scalable=no"
+		/>
 		<link rel="stylesheet" href="/css/styles.css" />
 		<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
 	</head>
 	<body class="form-center">
 		<div>
 			<h4>Google Analytics Report</h4>
+			<div>
+				<form>
+					PropertyID: <input type="text" id="propertyID" placeholder="<%- propertyID%>" value="<%- propertyID%>">
+				</form>
+				<form>
+					Emails:
+				</form>
+				<button onclick="load()">Refresh</button>
+			</div>
 			<div id="chart"></div>
 			<script>
-				// const url = <%- `http://localhost:${port}/api/analytics/fetch-data`%>;
+				const renderChart = data => {
+					const items = [];
+
+					data.forEach((v) => {
+						items.push([v.name, v.value]);
+					});
+
+					const chart = {
+						type: 'line',
+						series: [{ values: items }],
+					};
+					// renders zingchart to the page
+					zingchart.render({
+						id: 'chart',
+						data: chart,
+						height: '100%',
+						width: '100%',
+					});
+				};
 				const apiPort = <%= port%>;
-				const url = `http://localhost:${apiPort}/api/analytics/fetch-data`;
+				let url = `http://localhost:${apiPort}/api/analytics/fetch-data`;
 
-				console.log( 'url: ', url );
+				const fetchAndRender = (targetUrl) => {
+					fetch(targetUrl)
+						.then((res) => {
+							if (!res.ok) throw new Error(res.statusText);
+							return res.json();
+						})
+						.then((data) => { renderChart(data) })
+						.catch((error) => console.log('fetch error'));
+				}
 
-				fetch(url)
-					.then((res) => {
-						if (!res.ok) throw new Error(res.statusText);
-						return res.json();
-					})
-					.then((data) => {
-						const items = [];
+				const load = () => {
+					const propertyID = document.getElementById('propertyID').value;
 
-						data.forEach((v) => {
-							items.push([v.name, v.value]);
-						});
+					if ( !propertyID ) console.error('Could not load report.')
 
-						const chart = {
-							type: 'line',
-							series: [{ values: items }],
-						};
+					url+=`?propertyID=${propertyID}`
+					console.log(`Get report for ${propertyID}: at ${url}`);
 
-						// renders zingchart to the page
-						zingchart.render({
-							id: 'chart',
-							data: chart,
-							height: '100%',
-							width: '100%',
-						});
-					})
-					// catches errors in promise chain
-					.catch((error) => console.log('fetch error'));
+					fetchAndRender(url);
+				};
+
+				load();
 			</script>
 		</div>
 	</body>
