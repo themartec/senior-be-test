@@ -15,6 +15,19 @@
 ### Deadline of this task
 - Need response this task in 5 days.
 
+
+## Test 3
+1. Create a API for Video Processing with FFmpeg
+2. This API only test & run via Postman
+3. Scope of API include\
+  3.1. can upload or input video via http link\
+  3.2. allow add watermart text (multiple) into video above (can set position, size, time, color & font style)\
+  3.3. allow add watermark images (multiple) in video above (can set position, size, time)\
+  3.4. merge multiple video become final video (example: merge intro & outro into video above)
+### Deadline of this task
+- Need response this task in 7 days.
+
+
 ### Note: 
 - Requires using expressjs (can use any view engine express support to connect to api) with typescript
 - Write unittest for typescript code
