@@ -1,0 +1,5 @@
+.idea
+node_modules
+webpack.config.js
+Dockerfile
+docker-compose.yml
