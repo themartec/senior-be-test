@@ -1,0 +1,10 @@
+html
+    head
+        title='List of Files'
+    body 
+        each file in files
+            li
+                a(href=file.link)
+                    img(src=file.icon)
+                    p=file.name
+                a(href=file.downloadLink)=file.id

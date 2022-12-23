@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "lithe-catbird-372211",
+  "private_key_id": "1671bef666ac55c8f64b3d8a6001d965c563aa3e",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDHSO+q0fj2rB2u\nUCn2KXVFfjHvpYavESrxckR1XOXli6aKpKksn23TtuuPVQVrGYBXilHE7hEMrjK+\nxPEUuRAzUmJtXqqmu/pB0LxUITjRIjk3odZ1A0BkQy+k8NPtA54IxcO9cNOuk20I\nQS02A77Qqe1dcc5gb/NSEgomiKzWIVxz/P5ZG24ivEdi/M6fxoIjLb7UJPvQYql+\nDwTA1hAR/vvaNjEwRQ/1oyD/eBTABkizQ0R1kMpFtxa20ktJBeIiFkMDOqvOc+gc\nJzijAyfgdmiMZIc2axPHjo0qsKstN4Kdd4QkOGv4iBkvsdLZKEck8470A0JSNJ/q\nvwGOoMFPAgMBAAECggEAXhK/GHsgNImRRU0QUeTGODTXK9KOnqvTAsE3MdPVrqNa\nzc3nEmp8NNn/nty6vxD9tdVUvkrHf53n1Igxad/mluOIFSsAEc9g1prLnEdGg+rM\n6cca7ofHaM0Se6E32YXAn1GEEjRlqN5tNN1Xk0z3UZc1tsvXaUzPpulfI0uXk0i8\nA6lWV898pJjE6jVuwNEZux8cyCE5L6NSLFcJ9bhnpvDXmvEwrdD0YW5NYCN9+DAa\nvzU7VmsQFw8W8rmmBrmqhsQdV3PwuR6wpSenp47fm4EFF31J9tpKENUfeOHsAPvm\nFzSbfGhDnj2cWrfhA4e38Z8Au4MQW5drEBKdQEKdaQKBgQD5puPzNa3PWNKOP5Na\nWXgJ0/EUeAgzexE1Q9C0gK/wxXjS2/HsuY5BIMw9aud4KItgwFqkUgDT3YdPq/kX\ndFixkqbkAj/6AwpdAVrBXgNYLVt66QHuVfG0U7OEAIqLqkfz63xgwkZuPJJY6AaX\nZRFwvu/RHHhExcHYF+bw1eLx9QKBgQDMWi6AD61uscWQ5dPPwnjqYpwZuJ4GepFH\nnLZ2V4OgFhiYn4d8yFLx7iWI+ZovUPgfQW3hNQs6rpiaiIfaqnPNIk8Sx3mMBwvC\nAGQc6hIMPEwqyy0HtZ3MsDHJgYUnG8xntACo/RwRlvpFxIKUeKSCAAsvoCcORmdB\nqsvXNDhnswKBgQDmTek3sitXfo8vHsMmtCaimlxqD5kxNLTZOGhOO/ES4njlvHVf\ndoYe2szPU9GY7X42kPyNXgDZciGjg/hUhMZVef5vlQvD7g4fYmKAw+O98onTxyQ6\n5BoHyrdubLliwoGCKZkiAdbLVyGC1vlNrLT8F4hQljz05KJAYTxwrD+iCQKBgA3R\ny3M9nCzwOLwjzr8uF59CK+xRX95wS4LcRjqakHwzAlbP8wmtQm65/C/XMWYhw6XZ\nduTUAX5mcEuDECzpegtVVqOeecnOcC0eeaa67Z2GNmBufQ0YayN8huFpsOeEKb6Z\nnbHP7CYEX8h4EZyYzAc+mYMPAZUljbYTJtXW4jmhAoGAUpkDsFacS0PbcIMjlGGy\nbrKWNyDrQe3xYKufUReqSAY8KoNKi0755RtBRSZpPwZ712sIEKdZLdXkXKjwEqgX\nNtMXVl7rs2uqhyLPnStdaBtv6+lnNjs+EwwBEpt8YSux7H10LFA8/b51v3/uncdX\njn3oKDDjbEShiwH6PEwJrZ0=\n-----END PRIVATE KEY-----\n",
+  "client_email": "google-drive-sa@lithe-catbird-372211.iam.gserviceaccount.com",
+  "client_id": "114179808646505111402",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/google-drive-sa%40lithe-catbird-372211.iam.gserviceaccount.com"
+}
