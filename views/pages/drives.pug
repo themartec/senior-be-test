@@ -1,0 +1,8 @@
+html
+    head
+        title='List of Drives'
+    body 
+        ul
+            each drive in drives
+                a(href=drive.link)
+                    img(src=drive.image.url, style=drive.image.style)
