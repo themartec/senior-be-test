@@ -1,0 +1,61 @@
+services:
+  # Redis
+  redis:
+    image: redis
+    restart: always
+    ports:
+    - 6379:6379
+    networks:
+      - video-processing-network
+  # App
+  app:
+    image: video-processing
+    build:
+      context: .
+    restart: always
+    volumes:
+      - vstorages:/var/app/storages
+    ports:
+      - 3000:3000
+    command: "npm start"
+    networks:
+      - video-processing-network
+  # Queue dashboard
+  queue-dashboard:
+    image: video-processing
+    build:
+      context: .
+    restart: always
+    ports:
+      - 4000:4000
+    command: "node queue/dashboard.js"
+    networks:
+      - video-processing-network
+  worker-mergevideo:
+    image: video-processing
+    build:
+      context: .
+    restart: always
+    volumes:
+      - vstorages:/var/app/storages
+    command: "node queue -q merge-video-job"
+    networks:
+      - video-processing-network
+  worker-watermark:
+    image: video-processing
+    build:
+      context: .
+    restart: always
+    volumes:
+      - vstorages:/var/app/storages
+    command: "node queue -q watermark-job"
+    networks:
+      - video-processing-network
+volumes:
+   vstorages:
+    external:
+      name: vstorages-volume
+networks:
+  video-processing-network:
+    external:
+      name: video-processing-network

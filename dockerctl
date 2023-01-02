@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+# ==============================================================
+# Docker control script
+# Let do anything most simplier
+# -----------------------------------------
+# Start server:     ./dockerctl start
+# Stop server:      ./dockerctl stop
+# View status:      ./dockerctl status
+# Restart server:   ./dockerctl restart
+# Destroy server:   ./dockerctl destroy
+# Run Node:         ./dockerctl node [-v or something]
+# Run NPM:          ./dockerctl npm [-v or something]
+# Other things:     ./dockerctl (same as docker-compose command)
+# ==============================================================
+
+COMPOSE="docker-compose -f docker-compose.yml"
+APP_SCALE="--scale app=1 --scale --scale queue-dashboard=1 --scale worker-mergevideo=2 --scale worker-watermark=2" 
+
+if [ $# -gt 0 ]; then
+    if [ "$1" == "start" ]; then
+        ${COMPOSE} up -d ${APP_SCALE} --remove-orphans
+    elif [ "$1" == "stop" ]; then
+        ${COMPOSE} down
+    elif [ "$1" == "status" ]; then
+        ${COMPOSE} ps
+    elif [ "$1" == "restart" ]; then
+        ${COMPOSE} down && ${COMPOSE} up -d ${APP_SCALE}
+    elif [ "$1" == "destroy" ]; then
+        ${COMPOSE} down --volumes --remove-orphans --rmi local
+    elif [ "$1" == "update" ]; then
+        ${COMPOSE} pull && ${COMPOSE} up -d ${APP_SCALE} --remove-orphans
+    elif [ "$1" == "node" ]; then
+        shift 1
+        ${COMPOSE} exec -T app node "$@"
+    elif [ "$1" == "npm" ]; then
+        shift 1
+        ${COMPOSE} exec -T app npm "$@"
+    else
+        ${COMPOSE} "$@"
+    fi
+else
+    ${COMPOSE}
+fi
