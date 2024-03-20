@@ -1,36 +1,61 @@
-# Requirement Test for Senior BE - NodeJS
-## Test 1
-1. Create a simple form with 2 buttons link with GoogleDrive & OneDrive
-2. When you click on it, it will connect to your Gmail or OneDrive account and load everything in the that drive.
-3. Sync local drive & remote drive with features such as getting the link of a file/folder, deleting a file/folder and adding a new file/folder(can use any db for store data, localStorage, sqlite, etc but need include all in this repo for any dev can run it, this mean if use database such as mysql, sqlite, postgres, etc then must use docker-compose for setup and run local)
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+</p>
 
-### Deadline of this task
-- Need response this task in 4 days.
+[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+[circleci-url]: https://circleci.com/gh/nestjs/nest
+
+  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+    <p align="center">
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
+<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
+<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
+<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
+<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
+<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
+  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
+    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
+  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+</p>
+  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
+  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+
+## Description
+
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+
+## Installation
+
+```bash
+$ npm install
+```
+
+## Running the app
+
+```bash
+# development
+$ npm run start
+
+# watch mode
+$ npm run start:dev
+
+# production mode
+$ npm run start:prod
+```
+
+## Test
+
+```bash
+# unit tests
+$ npm run test
+
+# e2e tests
+$ npm run test:e2e
+
+# test coverage
+$ npm run test:cov
+```
 
 
-## Test 2
-1. Create a simple form with button link with Google Analytics
-2. After connected then call Restful APIs to load data and display again on browser (just get 1 - 2 charts for demo)
-3. Implement more `Task Schedule` and each hour then export all charts to PDF file and send email to list Emails in db(can use any db for store data, localStorage, sqlite, etc but need include all in this repo for any dev can run it, this mean if use database such as mysql, sqlite, postgres, etc then must use docker-compose for setup and run local)
-### Deadline of this task
-- Need response this task in 5 days.
-
-
-## Test 3
-1. Create a API for Video Processing with [FFmpeg](https://ffmpeg.org/)
-2. This API only test & run via Postman
-3. Scope of API include\
-  3.1. can upload or input video via http link\
-  3.2. allow add watermart text (multiple) into video above (can set position, size, time, color & font style)\
-  3.3. allow add watermark images (multiple) in video above (can set position, size, time)\
-  3.4. merge multiple video become final video (example: merge intro & outro into video above)
-### Deadline of this task
-- Need response this task in 7 days.
-
-
-### Note: 
-- Requires using expressjs (can use any view engine express support to connect to api) with typescript
-- Write unittest for typescript code
-- No UI required so you can use any css framework to use and have you can design UI to display
-- After done then push to this Repo and make PR then assign to [me](https://github.com/longthemartec)
-- How to make PR on public repo? check [HERE](https://opensource.com/article/19/7/create-pull-request-github)
