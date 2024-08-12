@@ -33,7 +33,7 @@
 2. No need to publish on marketplace, just need workflows & [Using a Backend](https://www.canva.dev/docs/apps/using-backend/) locally.
    2.1. Register and create app
    2.2. Setup backend to import, export assets/media from local to Canva and sync from Canva to local (local is Backend or this place run our main source code, with production is server)
-   2.3. Backend can be written in NodeJS / Python as desired, database can use files, SQLite or whatever as desired
+   2.3. Backend can be written in any language you wants and the same with databases.
 3. And need to call Canva's API to export any design that Canva supports.
 ### Deadline of this task
 - Need response this task in 7 working days.
