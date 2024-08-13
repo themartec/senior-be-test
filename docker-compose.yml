@@ -1,0 +1,87 @@
+version: "3.7"
+
+networks:
+  themartec:
+    driver: bridge
+
+services:
+  postgres:
+    image: postgres:14.4-alpine
+    container_name: themartec_postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=themartec_backend
+      - POSTGRES_PASSWORD=cjAEQJs3
+      - POSTGRES_DB=themartec_backend_development
+      - PGDATA=/var/lib/postgresql/data/themartec_backend/
+    ports:
+      - '7432:5432'
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - themartec
+
+  redis:
+    image: redis:latest
+    container_name: themartec_redis
+    restart: always
+    ports:
+      - '7379:6379'
+    networks:
+      - themartec
+
+  backend: &backend
+    container_name: themartec_app
+    build:
+      context: ./
+    working_dir: /src
+    environment:
+      - .env.development
+    ports:
+      - '7000:3000'
+    command:
+      - /bin/sh
+      - -c
+      - |
+        npm run migration:up
+        npm run dev
+    volumes:
+      - ./src:/src/src
+      - ./.env.development:/src/.env.development
+      - ./.env.test:/src/.env.test
+    stdin_open: true
+    tty: true
+    networks:
+      - themartec
+    depends_on:
+      - postgres
+
+  worker:
+    <<: *backend
+    container_name: themartec_worker
+    command:
+      - /bin/sh
+      - -c
+      - |
+        npm run migration:up
+        npm run jobs:init
+        npm run worker:dev
+    depends_on:
+      - redis
+      - postgres
+    ports: []
+    networks:
+      - themartec
+
+  mailcatcher:
+    image: schickling/mailcatcher
+    container_name: themartec_mailcatcher
+    networks:
+      - themartec
+    ports:
+      - '7180:1080'
+      - '7125:1025'
+
+volumes:
+  db-data:
+    driver: local
