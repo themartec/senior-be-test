@@ -53,7 +53,17 @@ Follow these steps to build and run the application using Docker Compose:
 
 ### Oauth 2.0 flow
 
-1. User don't have cookie, or refresh_token expired
+1. User request `/api/metadata` for render the UI, if cookie not present in request, assume user logged out and show 2
+   login button
+2. On user click Login button base on type, Open consent screen for Login
+3. After successful login in consent screen, they will auto redirect to our `/api/:type/callback` endpoint, using the
+   code they provide and get the access_token save into database
+4. After done all the flow, DB should have token, and we start set the cookie back to front-end
+5. From now on browser contains cookie and use that to request our back-end, and back-end using the token to call the
+   actual request to Drive
+
+> We don't want to store the access_token in client side, that why we save in back-end database and use the cookie to
+> retain session with server
 
 ![img.png](pic/oauthflow.png)
 
