@@ -111,7 +111,7 @@ export async function refreshToken(refreshToken: string) {
     }).toString()
   })
 
-  return await response.json()
+  return response
 }
 
 async function uploadToOneDrive(currentUser: UserDAO, file: Express.Multer.File, folderPath: string): Promise<void> {

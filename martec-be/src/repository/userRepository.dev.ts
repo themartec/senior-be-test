@@ -23,6 +23,16 @@ export const saveMetadata = (email: string, integrationType: string, key: string
   })
 }
 
+export const deleteMetadata = (email: string, integrationType: string) => {
+  return new Promise<string>((resolve, reject) => {
+    db.run(
+      'DELETE FROM metadata WHERE user_name = ? and type = ?',
+      [email, integrationType],
+      (err) => err ? reject(err) : resolve('success')
+    )
+  })
+}
+
 export const getUserTokensByIntegration = (googleId: string, provider: string) => {
   return new Promise<UserDAO>((resolve, reject) => {
     db.all(

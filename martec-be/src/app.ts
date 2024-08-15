@@ -41,6 +41,11 @@ app.use('/api/metadata', async (req: express.Request, res: express.Response) => 
   }
 })
 
+app.use('/redirect', async (req: express.Request, res: express.Response) => {
+  res.redirect(process.env.FRONT_END_URL!)
+})
+
+
 app.use('/api/logout', async (req: express.Request, res: express.Response) => {
   res.clearCookie('auth', { path: '/' })
   res.redirect(process.env.FRONT_END_URL!)

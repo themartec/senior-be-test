@@ -3,10 +3,12 @@ import { googleAuthClient } from '@/utils/googledrive.utlis'
 import { UserDAO } from '@/model/dao'
 import { refreshToken } from '@/service/onedriveFile.service'
 import { getUserEmail } from '@/utils/onedrive.utils'
-import { getUserTokensByIntegrationService, saveTokenMetadataService } from '@/service/user.service'
+import { getUserTokensByIntegrationService, removeExpiredToken, saveTokenMetadataService } from '@/service/user.service'
+import { RefreshTokenResponse } from '@/model/response.dto'
 
 
 export const getTokensMiddleware = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+
   const userIdCookie = req.signedCookies['auth']
   // const userIdCookie = 'sangtq969@gmail.com'
 
@@ -19,7 +21,7 @@ export const getTokensMiddleware = async (req: express.Request, res: express.Res
     let tokensFromDB = await getUserTokensByIntegrationService(userIdCookie, provider)
     tokensFromDB.email = userIdCookie
 
-    if (!tokensFromDB) {
+    if (!tokensFromDB.accessToken) {
       return res.status(401).send('Unauthorized')
     }
 
@@ -27,8 +29,12 @@ export const getTokensMiddleware = async (req: express.Request, res: express.Res
     if (Number(tokensFromDB.expiredAt) <= new Date().getTime() - (1000 * 60)) {
       console.log(`Access token expired at ${new Date(tokensFromDB.expiredAt).toLocaleString()}, refreshing using refresh token.`)
       const data = await refreshTokenByType(tokensFromDB, provider)
-
-      await saveTokenMetadataService(data?.email, provider, data?.credentials!)
+      if (data.status > 200) {
+        await removeExpiredToken(userIdCookie, provider)
+        res.status(401).send('Cookies not present')
+        return
+      }
+      await saveTokenMetadataService(data?.email!, provider, data?.credentials!)
       //re-fetch after refresh token
       tokensFromDB = await getUserTokensByIntegrationService(userIdCookie, provider)
       tokensFromDB.email = userIdCookie
@@ -54,34 +60,60 @@ function getProvider(url: string) {
   return provider.toUpperCase()
 }
 
-async function refreshTokenByType(oldToken: UserDAO, integrationType: string) {
+async function refreshTokenByType(oldToken: UserDAO, integrationType: string): Promise<RefreshTokenResponse> {
   switch (integrationType) {
     case 'GOOGLE': {
-      googleAuthClient.setCredentials({
-        access_token: oldToken.accessToken,
-        refresh_token: oldToken.refreshToken
-      })
-      const { credentials } = await googleAuthClient.refreshAccessToken()
-      const { email } = await googleAuthClient.getTokenInfo(credentials.access_token as string)
-      return {
-        email: email, credentials: {
-          accessToken: credentials.access_token,
-          refreshToken: credentials.refresh_token,
-          expiredAt: credentials.expiry_date!
+      try {
+        googleAuthClient.setCredentials({
+          access_token: oldToken.accessToken,
+          refresh_token: oldToken.refreshToken
+        })
+        const { credentials } = await googleAuthClient.refreshAccessToken()
+        const { email } = await googleAuthClient.getTokenInfo(credentials.access_token as string)
+        return {
+          status: 200,
+          message: `Refresh for ${integrationType} success`,
+          email: email,
+          credentials: {
+            accessToken: credentials.access_token!,
+            refreshToken: credentials.refresh_token!,
+            expiredAt: credentials.expiry_date!
+          }
+        }
+      } catch (err) {
+        console.error('Error retrieving refresh token:', err)
+        return {
+          message: `Refresh token expired, please connect to ${integrationType} again`,
+          status: 401
         }
       }
     }
     case 'ONEDRIVE': {
       const tokenResponse = await refreshToken(oldToken.refreshToken)
-      const userData = await getUserEmail(tokenResponse.access_token)
-      return {
-        email: userData.mail,
-        credentials: {
-          accessToken: tokenResponse.access_token,
-          refreshToken: tokenResponse.refresh_token,
-          expiredAt: new Date().getTime() + (tokenResponse.expires_in * 1000)
+      if (tokenResponse.ok) {
+        const tokenJson = await tokenResponse.json()
+        const userData = await getUserEmail(tokenJson.access_token)
+        return {
+          status: 200,
+          message: `Refresh for ${integrationType} success`,
+          email: userData.mail,
+          credentials: {
+            accessToken: tokenJson.access_token,
+            refreshToken: tokenJson.refresh_token,
+            expiredAt: new Date().getTime() + (tokenJson.expires_in * 1000)
+          }
+        }
+      } else {
+        return {
+          message: `Refresh token expired, please connect to ${integrationType} again`,
+          status: 401
         }
       }
     }
+    default:
+      return {
+        message: `Not supported for ${integrationType}`,
+        status: 400
+      }
   }
 }

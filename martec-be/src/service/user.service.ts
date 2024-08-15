@@ -1,5 +1,10 @@
 import { MetadataRow, StructuredData, UserDAO } from '@/model/dao'
-import { getUserMetadata, getUserTokensByIntegration, saveMetadata } from '@/repository/userRepository.dev'
+import {
+  deleteMetadata,
+  getUserMetadata,
+  getUserTokensByIntegration,
+  saveMetadata
+} from '@/repository/userRepository.dev'
 
 export const getUserMetadataService = async (userID: string) => {
   const metadata = await getUserMetadata(userID)
@@ -21,6 +26,10 @@ export const saveTokenMetadataService = async (email: string, integrationType: s
 
   // Wait for all promises to complete
   await Promise.all(promises);
+}
+
+export const removeExpiredToken = async (email: string, integrationType: string) => {
+  await deleteMetadata(email, integrationType)
 }
 
 const processRows = (rows: MetadataRow[]): StructuredData => {
