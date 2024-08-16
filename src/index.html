@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>The Martect - Test</title>
+  <meta name="google-signin-client_id" content="627911602967-2ot9g5n81rk89844cmfkhkkv9746ab1s.apps.googleusercontent.com">
+  <meta name="google-signin-scope" content="https://www.googleapis.com/auth/analytics.readonly">
+  <script src="https://apis.google.com/js/client:platform.js"></script>
+  <script src="https://accounts.google.com/gsi/client" onload="initClient()" async defer></script>
+</head>
+
+<body>
+  <script>
+    var client;
+    var access_token;
+
+    function initClient() {
+      client = google.accounts.oauth2.initTokenClient({
+        client_id: '627911602967-2ot9g5n81rk89844cmfkhkkv9746ab1s.apps.googleusercontent.com',
+        scope: 'https://www.googleapis.com/auth/analytics.readonly',
+        callback: (tokenResponse) => {
+          access_token = tokenResponse.access_token;
+        },
+      });
+    }
+    function getToken() {
+      client.requestAccessToken();
+    }
+    function revokeToken() {
+      google.accounts.oauth2.revoke(access_token, () => { console.log('access token revoked') });
+    }
+  </script>
+
+
+  <script>
+    var VIEW_ID = '115032377';
+
+    // Query the API and print the results to the page.
+    function queryReports() {
+      gapi.client.request({
+        path: '/v4/reports:batchGet',
+        root: 'https://analyticsreporting.googleapis.com/',
+        method: 'POST',
+        body: {
+          reportRequests: [
+            {
+              viewId: VIEW_ID,
+              dateRanges: [
+                {
+                  startDate: '7daysAgo',
+                  endDate: 'today'
+                }
+              ],
+              metrics: [
+                {
+                  expression: 'ga:sessions'
+                }
+              ]
+            }
+          ]
+        }
+      }).then(displayResults, console.error.bind(console));
+    }
+
+    function displayResults(response) {
+      var formattedJson = JSON.stringify(response.result, null, 2);
+      document.getElementById('query-output').value = formattedJson;
+    }
+  </script>
+
+  <h1>Google Analytics</h1>
+  <p><button onclick="getToken();">Get access token</button></p>
+  <!-- The Sign-in button. This will run `queryReports()` on success. -->
+  <!-- <p class="g-signin2" data-onsuccess="queryReports"></p> -->
+  
+  <p><button onclick="queryReports();">Query Reports</button></p>
+
+  <!-- The API response will be printed here. -->
+  <textarea cols="80" rows="20" id="query-output"></textarea>
+  <p><button onclick="revokeToken();">Revoke token</button></p>
+
+  <!-- Load the JavaScript API client and Sign-in library. -->
+  <script src="https://apis.google.com/js/client:platform.js"></script>
+
+</body>
+
+</html>
