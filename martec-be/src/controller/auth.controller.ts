@@ -68,7 +68,7 @@ router.get('/onedrive/callback', async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production'
     })
-    res.redirect(process.env.FRONT_END_URL! + '/google/folder/root')
+    res.redirect(process.env.FRONT_END_URL! + '/onedrive/folder/root')
 
   } catch (error) {
     console.error('Error:', error)

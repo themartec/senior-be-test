@@ -1,6 +1,10 @@
-import { getUserMetadataService, getUserTokensByIntegrationService, saveTokenMetadataService } from '@/service/user.service';
-import { getUserMetadata, getUserTokensByIntegration, saveMetadata } from '@/repository/userRepository.dev';
-import { UserDAO } from '@/model/dao';
+import {
+  getUserMetadataService,
+  getUserTokensByIntegrationService,
+  saveTokenMetadataService
+} from '@/service/user.service'
+import { getUserMetadata, getUserTokensByIntegration, saveMetadata } from '@/repository/userRepository.dev'
+import { UserDAO } from '@/model/type'
 
 // Mock the repository functions
 jest.mock('@/repository/userRepository.dev');

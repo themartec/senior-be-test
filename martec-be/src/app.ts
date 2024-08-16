@@ -51,8 +51,8 @@ app.use('/api/logout', async (req: express.Request, res: express.Response) => {
   res.redirect(process.env.FRONT_END_URL!)
 })
 
-app.get('/', (req, res) => {
-  res.render('index', { title: 'Hello Pug', message: 'Welcome to your Pug template!' })
+app.get('/heath', (req, res) => {
+  res.send(process.env)
 })
 
 const PORT = process.env.PORT || 3000

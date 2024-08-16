@@ -1,16 +1,14 @@
 import express from 'express'
 import { googleAuthClient } from '@/utils/googledrive.utlis'
-import { UserDAO } from '@/model/dao'
 import { refreshToken } from '@/service/onedriveFile.service'
 import { getUserEmail } from '@/utils/onedrive.utils'
 import { getUserTokensByIntegrationService, removeExpiredToken, saveTokenMetadataService } from '@/service/user.service'
-import { RefreshTokenResponse } from '@/model/response.dto'
+import { RefreshTokenResponse, UserDAO } from '@/model/type'
 
 
 export const getTokensMiddleware = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
 
   const userIdCookie = req.signedCookies['auth']
-  // const userIdCookie = 'sangtq969@gmail.com'
 
   const url = req.originalUrl.toLowerCase()
 
@@ -31,10 +29,10 @@ export const getTokensMiddleware = async (req: express.Request, res: express.Res
       const data = await refreshTokenByType(tokensFromDB, provider)
       if (data.status > 200) {
         await removeExpiredToken(userIdCookie, provider)
-        res.status(401).send('Cookies not present')
+        res.status(401).send('Refresh token fails')
         return
       }
-      await saveTokenMetadataService(data?.email!, provider, data?.credentials!)
+      await saveTokenMetadataService(data.email!, provider, data.credentials!)
       //re-fetch after refresh token
       tokensFromDB = await getUserTokensByIntegrationService(userIdCookie, provider)
       tokensFromDB.email = userIdCookie
@@ -90,7 +88,7 @@ async function refreshTokenByType(oldToken: UserDAO, integrationType: string): P
     }
     case 'ONEDRIVE': {
       const tokenResponse = await refreshToken(oldToken.refreshToken)
-      if (tokenResponse.ok) {
+      if (tokenResponse.status === 200) {
         const tokenJson = await tokenResponse.json()
         const userData = await getUserEmail(tokenJson.access_token)
         return {

@@ -1,7 +1,6 @@
 import { drive, googleAuthClient } from '@/utils/googledrive.utlis'
-import { UserDAO } from '@/model/dao'
 import { Readable } from 'stream'
-import { ServiceResponse } from '@/model/response.dto'
+import { ServiceResponse, UserDAO } from '@/model/type'
 
 export async function createGoogleFolder(currentUser: UserDAO, folderName: string, folderPath: string[]): Promise<ServiceResponse> {
   googleAuthClient.setCredentials({

@@ -1,5 +1,4 @@
-import { ServiceResponse } from '@/model/response.dto'
-import { UserDAO } from '@/model/dao'
+import { ServiceResponse, UserDAO } from '@/model/type'
 import process from 'node:process'
 
 export async function createFolder(currentUser: UserDAO, folderName: string, folderPath: string): Promise<ServiceResponse> {
@@ -97,21 +96,37 @@ export async function getOneDriveFileByFolderId(currentUser: UserDAO, folderId: 
 }
 
 export async function refreshToken(refreshToken: string) {
-  const response = await fetch(`https://login.microsoftonline.com/consumers/oauth2/v2.0/token`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: new URLSearchParams({
-      grant_type: 'refresh_token',
-      client_id: process.env.ONEDRIVE_CLIENT_ID!,
-      client_secret: process.env.ONEDRIVE_CLIENT_SECRET!,
-      refresh_token: refreshToken,
-      redirect_uri: process.env.ONEDRIVE_REDIRECT_URL!
-    }).toString()
-  })
+  try {
+    const response = await fetch(`https://login.microsoftonline.com/consumers/oauth2/v2.0/token`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        grant_type: 'refresh_token',
+        client_id: process.env.ONEDRIVE_CLIENT_ID!,
+        client_secret: process.env.ONEDRIVE_CLIENT_SECRET!,
+        refresh_token: refreshToken,
+        redirect_uri: process.env.ONEDRIVE_REDIRECT_URL!
+      }).toString()
+    })
+    if (!response.ok) {
+      console.error('refreshToken not success', response)
+      return {
+        status: response.status,
+        message: response.statusText
+      }
+    }
+    return await response.json()
+  } catch (err) {
+    console.error('refreshToken not success', err)
+    return {
+      status: 500,
+      message: 'Cannot perform refresh token'
+    }
+  }
 
-  return response
+
 }
 
 async function uploadToOneDrive(currentUser: UserDAO, file: Express.Multer.File, folderPath: string): Promise<void> {

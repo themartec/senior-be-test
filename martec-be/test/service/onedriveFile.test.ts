@@ -1,10 +1,11 @@
 import {
   createFolder,
-  uploadOneDriveFiles,
   deleteOneDriveFileById,
-  getOneDriveFileByFolderId, refreshToken
+  getOneDriveFileByFolderId,
+  refreshToken,
+  uploadOneDriveFiles
 } from '@/service/onedriveFile.service'
-import { UserDAO } from '@/model/dao'
+import { UserDAO } from '@/model/type'
 import fetchMock from 'jest-fetch-mock'
 
 beforeEach(() => {
@@ -81,7 +82,7 @@ describe('OneDrive API Functions', () => {
 
     expect(result).toEqual({ status: 200, body: [undefined] })
     expect(fetchMock).toHaveBeenCalledWith(
-      `https://graph.microsoft.com/v1.0/me/${uploadToPath}/file.txt:/content`,
+      `https://graph.microsoft.com/v1.0/me/drive/items/${uploadToPath}:/file.txt:/content`,
       expect.objectContaining({
         method: 'PUT',
         headers: {
@@ -230,5 +231,77 @@ describe('OneDrive API Functions', () => {
         }).toString()
       })
     )
+  })
+  test('refreshToken should refresh the access token fail', async () => {
+    const refreshTokenString = 'mockRefreshToken'
+    const mockResponse = {
+      access_token: 'newMockAccessToken',
+      token_type: 'Bearer',
+      expires_in: 3600
+    }
+
+    fetchMock.mockRejectOnce(new Error('Unexpected err'))
+
+    const result = await refreshToken(refreshTokenString)
+
+    expect(result).toEqual({
+      status: 500,
+      message: 'Cannot perform refresh token'
+    })
+    expect(fetchMock).toHaveBeenCalledWith(
+      `https://login.microsoftonline.com/consumers/oauth2/v2.0/token`,
+      expect.objectContaining({
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+          grant_type: 'refresh_token',
+          client_id: process.env.ONEDRIVE_CLIENT_ID!,
+          client_secret: process.env.ONEDRIVE_CLIENT_SECRET!,
+          refresh_token: refreshTokenString,
+          redirect_uri: process.env.ONEDRIVE_REDIRECT_URL!
+        }).toString()
+      })
+    )
+  })
+})
+describe('Test refresh token with more status code', () => {
+  beforeEach(() => {
+    fetchMock.resetMocks()
+  })
+
+  describe('Handling different HTTP status codes', () => {
+    const statusCodes = [
+      { code: 400, message: 'Bad Request' },
+      { code: 401, message: 'Unauthorized' },
+      { code: 403, message: 'Forbidden' },
+      { code: 404, message: 'Not Found' },
+      { code: 500, message: 'Internal Server Error' }
+    ]
+
+    statusCodes.forEach(({ code, message }) => {
+      it(`should handle a ${code} response correctly`, async () => {
+        fetchMock.mockResponseOnce(JSON.stringify({}), { status: code })
+
+        const result = await refreshToken('refresh-token')
+
+        expect(result).toEqual({
+          status: code,
+          message: message
+        })
+
+        expect(fetchMock).toHaveBeenCalledWith(
+          'https://login.microsoftonline.com/consumers/oauth2/v2.0/token',
+          expect.objectContaining({
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: expect.stringContaining('grant_type=refresh_token')
+          })
+        )
+      })
+    })
   })
 })

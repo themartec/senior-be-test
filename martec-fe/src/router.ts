@@ -7,11 +7,6 @@ const router = createRouter({
       path: '/:type/folder/:pathMatch(.*)*',
       name: 'folder',
       component: () => import('@/FolderView.vue')
-    },
-    {
-      path: '/',
-      name: 'home',
-      component: () => import('@/Index.vue')
     }
   ]
 })

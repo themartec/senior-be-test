@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  web-api:
+    build: martec-be
+    container_name: my-backend-app
+    ports:
+      - "3000:3000"
+    env_file:
+      - backend.env
+  web-frontend:
+    build: martec-fe
+    container_name: my-fe-app
+    ports:
+      - "5173:80"
+    env_file:
+      - frontend.env

@@ -32,18 +32,24 @@ Follow these steps to build and run the application using Docker Compose:
    cd <repository-directory>
    ```
 
-**2. Build and Start the Containers**
+**2. Check the .env file**
+
+- There are 2 env file `frontend.env` and `backend.env` using for running `docker-compose.yml` file
+- Change them accordingly
+
+**3. Build and Start the Containers**
 
    ```bash
    docker-compose up --build
    ```
 
-**3. Access the Application**
+**4. Access the Application**
 
 * Frontend: Open your web browser and navigate to http://localhost:5173 to access the frontend application.
 * Backend: The backend service will be available at http://localhost:3000.
+* App port can be change in `docker-compose.yml`
 
-**4. Others**
+**5. Others**
 
 * You can modify the env variable inside `docker-compose.yml` file to change the setup
 
@@ -57,7 +63,7 @@ Follow these steps to build and run the application using Docker Compose:
    login button
 2. On user click Login button base on type, Open consent screen for Login
 3. After successful login in consent screen, they will auto redirect to our `/api/:type/callback` endpoint, using the
-   code they provide and get the access_token save into database
+   `code` they provide and get the `access_token` save into database
 4. After done all the flow, DB should have token, and we start set the cookie back to front-end
 5. From now on browser contains cookie and use that to request our back-end, and back-end using the token to call the
    actual request to Drive

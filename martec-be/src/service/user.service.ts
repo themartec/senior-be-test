@@ -1,4 +1,4 @@
-import { MetadataRow, StructuredData, UserDAO } from '@/model/dao'
+import { MetadataRow, StructuredData, UserDAO } from '@/model/type'
 import {
   deleteMetadata,
   getUserMetadata,

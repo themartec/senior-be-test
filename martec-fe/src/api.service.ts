@@ -24,7 +24,7 @@ export async function uploadFilesToServer(type: 'google' | 'onedrive', formData:
     body: formData
   })
   if (!response.ok) {
-    throw new Error('Network response.dto.ts was not ok.')
+    throw new Error('Network was not ok.')
   }
   return await response.json()
 }

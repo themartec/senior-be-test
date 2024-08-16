@@ -1,6 +1,12 @@
-import { Database } from 'sqlite3';
-import { saveMetadata, getUserTokensByIntegration, getUserMetadata, deleteUser, db } from '@/repository/userRepository.dev';
-import path from 'path';
+import { Database } from 'sqlite3'
+import {
+  deleteMetadata,
+  deleteUser,
+  getUserMetadata,
+  getUserTokensByIntegration,
+  saveMetadata
+} from '@/repository/userRepository.dev'
+import path from 'path'
 
 // Mock the sqlite3 module
 jest.mock('sqlite3', () => {
@@ -8,6 +14,7 @@ jest.mock('sqlite3', () => {
     run: jest.fn(),
     all: jest.fn(),
     close: jest.fn(),
+    serialize: jest.fn()
   };
   return { Database: jest.fn(() => mockDatabase) };
 });
@@ -22,6 +29,11 @@ describe('Database Operations', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
+  // it('should create the metadata table if it does not already exist', async () => {
+  //   const row = await db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='metadata'");
+  //   expect(row).not.toBeNull();
+  //   expect(row.name).toBe('metadata');
+  // });
 
   test('saveMetadata should insert or replace metadata', async () => {
     mockDb.run =jest.fn().mockImplementation((query, params, callback) => callback(null));
@@ -68,4 +80,15 @@ describe('Database Operations', () => {
       expect.any(Function)
     );
   });
+
+  test('deleteMetadata should delete metadata from the database', async () => {
+    mockDb.run = jest.fn().mockImplementation((query, params, callback) => callback(null))
+
+    await expect(deleteMetadata('googleId', 'google')).resolves.toBe('success')
+    expect(mockDb.run).toHaveBeenCalledWith(
+      'DELETE FROM metadata WHERE user_name = ? and type = ?',
+      ['googleId', 'google'],
+      expect.any(Function)
+    )
+  })
 });

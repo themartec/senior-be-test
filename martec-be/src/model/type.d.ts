@@ -17,3 +17,25 @@ export interface StructuredData {
     [key: string]: string;
   };
 }
+
+export interface ServiceResponse {
+  status: number;
+  body: any;
+}
+
+
+export interface RefreshTokenResponse {
+  status: number;
+  message: string;
+  email?: string,
+  credentials?: UserDAO
+}
+
+
+declare global {
+  namespace Express {
+    interface Request {
+      currentUser: UserDAO;
+    }
+  }
+}

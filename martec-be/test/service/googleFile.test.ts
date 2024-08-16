@@ -3,10 +3,10 @@ import {
   createGoogleFolder,
   deleteGoogleFileById,
   getGoogleFileByFolderId,
-  uploadGoogleFiles,
-  uploadFilesToDrive
+  uploadFilesToDrive,
+  uploadGoogleFiles
 } from '@/service/googleFile.service'
-import { UserDAO } from '@/model/dao'
+import { UserDAO } from '@/model/type'
 import { drive } from '@/utils/googledrive.utlis'
 
 

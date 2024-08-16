@@ -1,6 +1,6 @@
 import { Database } from 'sqlite3'
 import path from 'path'
-import { UserDAO } from '@/model/dao'
+import { UserDAO } from '@/model/type'
 
 // Open the database connection
 const dbPath = path.resolve(__dirname, 'database.sqlite3')
@@ -10,6 +10,22 @@ const db = new Database(dbPath, (err) => {
   } else {
     console.log('Connected to database')
   }
+})
+
+db.serialize(() => {
+  db.run(`CREATE TABLE IF NOT EXISTS metadata (
+    composite_key TEXT PRIMARY KEY,
+    user_name TEXT NOT NULL,
+    type TEXT NOT NULL,
+    key TEXT NOT NULL,
+    value TEXT NOT NULL
+  )`, (err) => {
+    if (err) {
+      console.error('Error creating table', err)
+    } else {
+      console.log('Table created or already exists')
+    }
+  })
 })
 
 export const saveMetadata = (email: string, integrationType: string, key: string, data: string) => {
