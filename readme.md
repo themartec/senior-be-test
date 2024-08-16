@@ -78,7 +78,7 @@ Follow these steps to build and run the application using Docker Compose:
 
 ### Choose the database design
 
-Since the integration might be expands and will have lot more thing to consider other than `accessToken`
+Since the integration might be expanded and will have lot more thing to consider other than `accessToken`
 or `refreshToken`.
 So the table will have kind of unique design to comprehend that (picture bellow)
 
