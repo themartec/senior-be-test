@@ -3,7 +3,7 @@ import path from 'path'
 import { UserDAO } from '@/model/type'
 
 // Open the database connection
-const dbPath = path.resolve(__dirname, 'database.sqlite3')
+const dbPath = path.resolve('database.sqlite3')
 const db = new Database(dbPath, (err) => {
   if (err) {
     console.error('Could not connect to database:', err.message)

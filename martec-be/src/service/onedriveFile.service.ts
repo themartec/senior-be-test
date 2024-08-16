@@ -85,6 +85,7 @@ export async function getOneDriveFileByFolderId(currentUser: UserDAO, folderId: 
       mimeType: item.file ? item.file.mimeType : 'folder',  // Assuming mimeType as per your example
       id: item.id,
       name: item.name,
+      webUrl: item.webUrl,
       expandable: !item.file
     }))
     console.log(files)

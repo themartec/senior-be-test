@@ -52,7 +52,10 @@ Follow these steps to build and run the application using Docker Compose:
 **5. Others**
 
 * You can modify the env variable inside `docker-compose.yml` file to change the setup
+* You can verify app is running in Docker compose logs
+* You can go to `http://localhost:3000/heath` to see all available `ENV_VARIABLES`
 
+![img.png](pic/verify.png)
 ******
 
 ## Technical note
