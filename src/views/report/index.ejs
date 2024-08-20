@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8" />
+		<title>Testing</title>
+		<meta
+			name="viewport"
+			content="width=device-width, inital-scale=1, user-scalable=no"
+		/>
+		<link rel="stylesheet" href="/css/styles.css" />
+		<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+	</head>
+	<body class="form-center">
+		<div>
+			<h4>Google Analytics Report</h4>
+			<div>
+				<form>
+					PropertyID: <input type="text" id="propertyID" placeholder="<%- propertyID%>" value="<%- propertyID%>">
+				</form>
+				Emails:
+				<section id="emailListID"></section>
+				<br>
+				<br>
+				<input type="text" id="subscribeEmailID">
+				<button onclick="subscribe()">Subscribe</button>
+				<br>
+				<br>
+				<input type="text" id="unsubscribeEmailID">
+				<button onclick="unsubscribe()">Unsubscribe</button>
+				<br>
+				<br>
+				<button onclick="load()">Refresh</button>
+			</div>
+			<div id="chartContainer"></div>
+			<script>
+				const apiPort = <%= port%>;
+				// const curEmail = <%= email%>;
+				const subscribe = () => {
+					const email = document.getElementById('subscribeEmailID').value;
+
+					if ( !email || document.getElementById(email) ) return;
+					const url = `http://localhost:${apiPort}/api/analytics/subscribe`;
+
+					fetch(
+						url,
+						{
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							body: JSON.stringify({ email })
+						}
+					).then((res) => {
+						if (!res.ok) throw new Error(res.statusText);
+						const emailEl = document.createElement('option');
+						emailEl.setAttribute('id', email);
+						emailEl.setAttribute('value', email);
+
+						document.getElementById(emailListID).appendChild(emailEl);
+						return res.json();
+					}).catch((error) => console.log(error));
+				}
+				const unsubscribe = () => {
+					const email = document.getElementById('subscribeEmailID').value;
+
+					if ( !email || !document.getElementById(email) ) return;
+
+					const url = `http://localhost:${apiPort}/api/analytics/unsubscribe`;
+
+					fetch(
+						url,
+						{
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							body: JSON.stringify({ email })
+						}
+					).then((res) => {
+						if (!res.ok) throw new Error(res.statusText);
+						document.removeChild(document.getElementById(email));
+						return res.json();
+					}).catch((error) => console.log(error));
+				}
+				const renderChart = (elID, title, items) => {
+					console.log({ elID, title, items });
+					let rendersItems = [];
+
+					if ( items.length ) {
+						const keys = Object.keys(items[0]);
+						rendersItems = items.map( it => keys.map(k => it[k]) );
+					}
+
+					const chart = {
+						type: 'line',
+						series: [{ values: rendersItems }],
+						title: {
+							text: title,
+						},
+					};
+					// renders zingchart to the page
+					zingchart.render({
+						id: elID,
+						data: chart,
+						height: '100%',
+						width: '100%',
+					});
+				};
+				const fetchAndRender = (targetUrl) => {
+					fetch(targetUrl)
+						.then((res) => {
+							if (!res.ok) throw new Error(res.statusText);
+							return res.json();
+						})
+						.then((reports) => {
+							console.log({ reports });
+							const chartContainer = document.getElementById('chartContainer');
+							reports.map(({ title, items }) => {
+								const chartEl = document.createElement('div');
+
+								chartEl.setAttribute('id', `chart_${title}`);
+								chartEl.setAttribute('class', 'chart');
+								chartContainer.appendChild(chartEl);
+								renderChart(chartEl.id, title, items);
+							});
+						})
+						.catch((error) => console.log(error));
+				}
+
+				const load = async () => {
+					const propertyID = document.getElementById('propertyID').value;
+
+					if ( !propertyID ) console.error('Could not load report.')
+
+					const url = `http://localhost:${apiPort}/api/analytics/fetch-data?propertyID=${propertyID}`;
+					console.log(`Get report for ${propertyID}: at ${url}`);
+
+					// fetchAndRender(url);
+				};
+
+				load();
+			</script>
+		</div>
+	</body>
+</html>

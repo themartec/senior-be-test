@@ -1,0 +1,25 @@
+{
+	"compilerOptions": {
+		"alwaysStrict": true,
+		"baseUrl": "./src",
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"lib": ["es6", "DOM"],
+		"module": "CommonJS",
+		"moduleResolution": "Node",
+		"noImplicitAny": true,
+		"noResolve": false,
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"outDir": "./dist",
+		"preserveConstEnums": true,
+		"resolveJsonModule": true,
+		"sourceMap": false,
+		"strictNullChecks": true,
+		"suppressImplicitAnyIndexErrors": false,
+		"target": "ES2017",
+		"types": ["reflect-metadata"],
+	},
+	"include": ["src/**/*.ts", "src/server.ts"],
+	"exclude": ["node_modules"]
+}
