@@ -89,7 +89,11 @@ export const App = () => {
 
             switch (status) {
                 case "COMPLETED":
-                    setAuthState("authenticated");
+                    checkAuthenticationStatus(auth).then((status) => {
+                        console.log(status)
+                        setAuthState(status.authState);
+                        setAuthResState(status)
+                    });
                     break;
                 case "ABORTED":
                     console.warn("Authentication aborted by user.");

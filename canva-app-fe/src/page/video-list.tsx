@@ -4,7 +4,7 @@ import {
   TextInput,
   ClearDecorator,
   SearchIcon,
-  LoadingIndicator,
+  LoadingIndicator, Text,
 } from "@canva/app-ui-kit";
 import { upload } from "@canva/asset";
 import { auth } from "@canva/user";
@@ -49,7 +49,9 @@ function VideoList({assets, isLoading, onSearch}) {
   return (
     <>
       <Rows spacing="1u">
-        {assets.map((item, index) => renderCard(item, index))}
+        {assets.length == 0
+            ? <Text>Nothing to see here, Create your asset by Export or Upload from Our site</Text>
+            : assets.map((item, index) => renderCard(item, index))}
       </Rows>
     </>
   );
