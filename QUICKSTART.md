@@ -33,7 +33,7 @@ Follow these steps to build and run the application using Docker Compose:
 **2. Check the .env file**
 
 - There are 3 env file `app.env`, `backend.env` and `cloudflare.env` using for running `docker-compose.yml` file
-- Change them accordingly (if using my env, don't change eny thing)
+- Change them accordingly (if using my env, don't change anything)
 
 **3. Build and Start the Containers**
 
