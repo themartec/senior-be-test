@@ -27,4 +27,9 @@ public interface UserMetadataRepo extends JpaRepository<UserMetadata, Long> {
     @Transactional
     @Query("delete from UserMetadata mu where mu.user.userName = :username and mu.metadataKey in ('CANVA_ACCESS_TOKEN','CANVA_CONNECT_FOLDER','CANVA_CONNECT_UID','CANVA_REFRESH_TOKEN','CANVA_TOKEN_EXPIRED_AT') ")
     void deleteCanvaMetadata(String username);
+
+    @Modifying
+    @Transactional
+    @Query("delete from UserMetadata mu where mu.metadataValue = :username and mu.metadataKey in ('CANVA_APP_UID') ")
+    void disconnectApp(String username);
 }

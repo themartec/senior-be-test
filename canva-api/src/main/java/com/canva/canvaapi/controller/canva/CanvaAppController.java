@@ -4,10 +4,9 @@ import com.canva.canvaapi.model.entity.UserEntity;
 import com.canva.canvaapi.model.request.CanvaExport;
 import com.canva.canvaapi.model.response.CanvaAppAssets;
 import com.canva.canvaapi.repo.UserCanvaRepo;
+import com.canva.canvaapi.repo.UserMetadataRepo;
 import com.canva.canvaapi.service.CanvaAssetService;
 import com.canva.canvaapi.utils.JWTUtils;
-import org.checkerframework.checker.units.qual.A;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,19 +16,41 @@ import java.util.Map;
 @RestController
 @RequestMapping("/public/canva")
 public class CanvaAppController {
-    @Autowired
-    UserCanvaRepo userCanvaRepo;
-    @Autowired
-    CanvaAssetService canvaAssetService;
+    private final UserCanvaRepo userCanvaRepo;
+    private final CanvaAssetService canvaAssetService;
+    private final UserMetadataRepo userMetadataRepo;
+
+    public CanvaAppController(UserCanvaRepo userCanvaRepo, CanvaAssetService canvaAssetService, UserMetadataRepo userMetadataRepo) {
+        this.userCanvaRepo = userCanvaRepo;
+        this.canvaAssetService = canvaAssetService;
+        this.userMetadataRepo = userMetadataRepo;
+    }
 
     @PostMapping("/status")
-    public Map<String, Object> getAuthenticationStatus(@RequestHeader("Authorization") String bearer) throws Exception {
+    public ResponseEntity<Map<String, Object>> getAuthenticationStatus(@RequestHeader("Authorization") String bearer) throws Exception {
         String token = bearer.substring(7);
         String userId = (String) JWTUtils.decodeJWT(token).get("userId");
         boolean isAuthenticated = userCanvaRepo.isCanvaAppConnected(userId);
-        return Map.of("isAuthenticated", isAuthenticated, "canvaUserId", userId);
+        String username = "";
+        if (isAuthenticated) username = userCanvaRepo.getUserInfo(userId).getUserName();
+        return ResponseEntity.ok(Map.of(
+                "isAuthenticated", isAuthenticated,
+                "canvaUserId", userId,
+                "username", username
+        ));
     }
 
+    @PostMapping("/disconnect")
+    public ResponseEntity<String> disconnect(@RequestHeader("Authorization") String bearer) throws Exception {
+        String token = bearer.substring(7);
+        String userId = (String) JWTUtils.decodeJWT(token).get("userId");
+        boolean isAuthenticated = userCanvaRepo.isCanvaAppConnected(userId);
+        if (isAuthenticated) {
+            userMetadataRepo.disconnectApp(userId);
+            return ResponseEntity.ok("disconected");
+        }
+        return ResponseEntity.badRequest().body("Can't disconnected");
+    }
 
     @PostMapping("/story/export")
     public void exportToAsset(

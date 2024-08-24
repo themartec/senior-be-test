@@ -5,3 +5,8 @@ interface AssetResponse {
   assetUrl: string;
 }
 type AuthState = "authenticated" | "not_authenticated" | "checking" | "error";
+
+interface AuthStatus {
+  authState: AuthState;
+  body: any
+}
