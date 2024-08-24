@@ -31,7 +31,7 @@ public class AppSecurityConfig {
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(form -> form
-//                        .loginPage("/app-login")
+                        .loginPage("/login")
                         .defaultSuccessUrl("/assets")
                         .permitAll()
                 )

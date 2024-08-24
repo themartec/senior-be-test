@@ -67,6 +67,27 @@ Follow these steps to build and run the application using Docker Compose:
 
 ******
 
+## Canva App SDK config
+> If you want to only view the app and not change anything in src code, you can skip here and use my `.env` file to run
+
+
+- Create app in https://www.canva.com/developers/apps 
+- Click Create an app.
+- Select a target audience for the app:
+  - Public: You can make your app available to all 
+  of Canva's users, but the app will need to be reviewed by Canva and meet the requirements outlined in the submission checklist.
+- Click Create.
+- Go to authentication
+  - Change parameter to this
+  ![img.png](images/app-config.png)
+  - It can be changed to `localhost` (your backend using in local)
+- Read [Canva Manual Authentication Flow](https://www.canva.dev/docs/apps/authenticating-users/manual/) for better understanding auth flow
+- In App Source
+  - Development URL: Using `localhost:5173/app.js` (can't use public url here)
+  - App source: Can be get from `/canva-app-fe/dist/app.js` or download from `https://canva.snek198.site/app.js`
+  ![img.png](images/app-src-cfg.png)
+
+------
 ## Technical note
 ### Canva App Overview Design
 
@@ -86,5 +107,6 @@ Since the integration might be expanded and will have lot more thing to consider
 or `refreshToken`.
 
 So the table will have denormalized form to easily add, modify, delete metadata (it call EAV Model), and can be implement using NoSql database.
+
 ![img.png](images/schema.png)
 

@@ -11,23 +11,25 @@
 
 </head>
 <body class="container">
-    <h1>Register</h1>
-    <div th:if="${param.errors}">
-        <span style="color: indianred" th:text="${param.errors}"> </span>
+<h1>Register</h1>
+<div th:if="${param.errors}">
+    <span style="color: indianred" th:text="${param.errors}"> </span>
+</div>
+<form th:action="@{/register}" th:object="${user}" method="post">
+    <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" class="form-control" id="username" name="username" th:field="*{userName}" required>
     </div>
-    <form th:action="@{/register}" th:object="${user}" method="post">
-        <div class="mb-3">
-            <label for="username" class="form-label">Username</label>
-            <input type="text" class="form-control" id="username" name="username" th:field="*{userName}" required>
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password" name="password" th:field="*{password}" required>
-        </div>
-        <div>
-            <button type="submit" class="btn btn-primary">Register</button>
-        </div>
-    </form>
-    <a th:href="@{/login}">Already have an account? Login here</a>
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" name="password" th:field="*{password}" required>
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary">Register</button>
+    </div>
+</form>
+<div class="text-center">
+    <p>Already have an account? <a th:href="@{/login}">Login here</a></p>
+</div>
 </body>
 </html>
