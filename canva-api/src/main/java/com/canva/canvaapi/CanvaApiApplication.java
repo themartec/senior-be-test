@@ -16,8 +16,8 @@ import java.util.Properties;
 @SpringBootApplication
 public class CanvaApiApplication {
 
-    public static void main(String[] args) {
-        System.out.println(System.getProperties());
+    public static void main(String[] args) throws InterruptedException {
+        Thread.sleep(2000);
         SpringApplication.run(CanvaApiApplication.class, args);
     }
 
