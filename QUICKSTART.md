@@ -68,7 +68,7 @@ Follow these steps to build and run the application using Docker Compose:
 ******
 
 ## Canva App SDK config
-> If you want to only view the app and not change anything in src code, you can skip here and use my `.env` file to run
+> Since App not published so the only person that can access the app is App owner, please follow this guild to create your own app
 
 
 - Create app in https://www.canva.com/developers/apps 
