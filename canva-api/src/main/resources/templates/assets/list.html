@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Assets</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Optional Bootstrap theme -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-theme.min.css" rel="stylesheet">
+
+</head>
+<body class="container my-5">
+<h1 class="mb-4 text-center">Assets</h1>
+<a th:href="@{/logout}" class="btn btn-danger">Logout</a>
+<div class="d-flex justify-content-between mb-3">
+    <a th:href="@{/assets/new}" class="btn btn-primary">Add New Asset</a>
+    <a th:if="${!isCanvaConnected}" th:href="@{/canva/oauth/connect}" class="btn btn-primary">Connect to Canva</a>
+    <p th:if="${isCanvaConnected}">You connected with canva</p>
+</div>
+
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+    <tr>
+        <th>Title</th>
+        <th>Created at</th>
+        <th>URL</th>
+        <th>MIME Type</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="asset : ${assets}">
+        <td th:text="${asset.title}"></td>
+        <td th:text="${asset.createdAt}"></td>
+        <td>
+            <a th:href="@{'/assets/public/files/'+${asset.url}}" target="_blank" th:text="${asset.url}"></a>
+        </td>
+        <td th:text="${asset.mimeType}"></td>
+        <td>
+            <a th:href="@{'/assets/edit/' + ${asset.id}}" class="btn btn-sm btn-warning me-2">Edit</a>
+            <a th:href="@{'/assets/delete/' + ${asset.id}}" class="btn btn-sm btn-danger"
+               onclick="return confirm('Are you sure?')">Delete</a>
+
+            <a th:if="${isCanvaConnected}" target="_blank" th:href="@{'/api/assets/canva/open/' + ${asset.id}}" class="btn btn-sm btn-danger"
+               onclick="return confirm('Are you sure?')">Open in Canva</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+
+</html>

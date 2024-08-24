@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Asset</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Optional Bootstrap theme -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-theme.min.css" rel="stylesheet">
+
+</head>
+<body class="container my-5">
+    <h1>Edit Asset</h1>
+
+    <form th:action="@{'/assets/update/' + ${id}}" th:object="${asset}" enctype="multipart/form-data" method="post">
+        <div class="mb-3">
+            <label for="name" class="form-label">Title:</label>
+            <input type="text" id="name" th:field="*{title}" class="form-control" required/>
+        </div>
+        <div class="mb-3">
+            <label for="file" class="form-label">File</label>
+            <input type="file" class="form-control" id="file" name="file" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="createdAt" class="form-label">Created At:</label>
+            <input id="createdAt" th:field="*{createdAt}" class="form-control" disabled/>
+        </div>
+
+        <div class="mb-3">
+            <label for="url" class="form-label">File name:</label>
+            <input id="url" th:field="*{url}" class="form-control" disabled/>
+        </div>
+
+        <div class="mb-3">
+            <label for="mimeType" class="form-label">MIME Type:</label>
+            <input id="mimeType" th:field="*{mimeType}" class="form-control" disabled/>
+        </div>
+
+
+        <!-- Preview Section -->
+        <div class="mb-3">
+            <label class="form-label">Preview:</label>
+            <div th:if="${asset.mimeType.startsWith('image/')}" class="text-center">
+                <img th:src="@{'/assets/public/files/' + ${asset.url}}" class="img-fluid" alt="Asset Preview"/>
+            </div>
+            <div th:if="${asset.mimeType.startsWith('video/')}" class="text-center">
+                <video th:src="@{'/assets/public/files/' + ${asset.url}}" class="img-fluid" controls>
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div th:if="${not (asset.mimeType.startsWith('image/') or asset.mimeType.startsWith('video/'))}" class="text-center">
+                <p>Preview not available for this file type.</p>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="/assets" class="btn btn-secondary">Cancel</a>
+    </form>
+<a th:href="@{/assets}">Back to Asset List</a>
+</body>
+</html>
