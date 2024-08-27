@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login Form</title>
+    <meta charset="UTF-8">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Optional Bootstrap theme -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-theme.min.css" rel="stylesheet">
+
+</head>
+<body>
+
+
+<div class="container">
+    <h1>Login</h1>
+    <div th:if="${param.errors}">
+        <span style="color: indianred" th:text="${param.errors}"> </span>
+    </div>
+    <form action="#" th:action="@{/canva/plugin/login}" th:method="post">
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+
+        <div class="text-center">
+            <p>Not a member? <a href="#" onClick="MyWindow=window.open('/register','MyWindow','width=600,height=300'); return false;">Register</a></p>
+        </div>
+
+        <!-- Additional values as hidden fields -->
+        <input type="hidden" name="state" th:value="${state}">
+        <input type="hidden" name="nonce" th:value="${nonce}">
+        <input type="hidden" name="canvaUserToken" th:value="${canvaUserToken}">
+        <input type="hidden" name="nonceWithExpiry" th:value="${nonceWithExpiry}">
+
+    </form>
+
+    <!-- Display additional values for debugging or informational purposes -->
+    <div>
+        <p>State: <span th:text="${state}">State</span></p>
+        <p>Nonce: <span th:text="${nonce}">Nonce</span></p>
+        <p>Canva User Token: <span th:text="${canvaUserToken}">Canva User Token</span></p>
+        <p>Nonce With Expiry: <span th:text="${nonceWithExpiry}">Nonce With Expiry</span></p>
+    </div>
+</div>
+
+</body>
+</html>
