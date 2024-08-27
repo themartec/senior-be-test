@@ -58,10 +58,11 @@ function PictureCardWrap({ title, author, url, mimeType }) {
         </Column>
         <Column>
           <Rows spacing="0.5u">
-            <Title lineClamp={2} size="xsmall">
+            <Title lineClamp={2} size="large">
               {title}
             </Title>
-            <Text size="small">{author}</Text>
+            <Text size="medium">{author}</Text>
+            <Text size="small">Click or drag to add into design</Text>
           </Rows>
         </Column>
       </Columns>

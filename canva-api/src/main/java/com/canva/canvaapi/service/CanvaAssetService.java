@@ -171,7 +171,7 @@ public class CanvaAssetService {
                         String fileName = createdAt.format(FILE_DATE_FORMAT) + "_" + index + canvaExport.getTitle() + attribute.getExtension();
                         assetEntity.setTitle(canvaExport.getTitle());
                         assetEntity.setUrl(fileName);
-                        assetEntity.setMimeType(attribute.getMimeType());
+                        assetEntity.setMimeType(getMimeType(attribute.getExtension()));
                         assetEntity.setCreatedAt(createdAt);
                         assetEntity.setUser(user);
                         assetsList.add(assetEntity);

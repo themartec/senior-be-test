@@ -66,7 +66,7 @@ export const App = () => {
 
     useEffect(() => {
         fetchData();
-    }, [exportState]);
+    }, [exportState, authState]);
 
     const createAuthenticationMessage = (state: AuthState) => {
         switch (state) {
@@ -93,6 +93,7 @@ export const App = () => {
                         console.log(status)
                         setAuthState(status.authState);
                         setAuthResState(status)
+                        fetchData()
                     });
                     break;
                 case "ABORTED":

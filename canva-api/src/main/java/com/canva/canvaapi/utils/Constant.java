@@ -21,6 +21,8 @@ public class Constant {
         mimeTypeMap.put("json", "application/json");
         mimeTypeMap.put("xml", "application/xml");
         mimeTypeMap.put("zip", "application/zip");
+        mimeTypeMap.put(".mp4", "video/mp4");
+        mimeTypeMap.put("mp4", "video/mp4");
     }
 
     public static String getMimeType(String fileExtension) {
